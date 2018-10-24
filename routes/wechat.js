@@ -101,17 +101,15 @@ router.get('/test', function(req, res, next) {
     //加密
     var scyptoString = sha1(original);
     //判断是否与你填写TOKEN相等
-    console.log(scyptoString);
     if (signature == scyptoString) {
         console.log('ok');
-//获取xml数据
+        console.log(req.body.xml);
         req.on("data", function(data) {
-            console.log(data);
             //将xml解析
-            /*parser.parseString(data.toString(), function(err, result) {
+            parser.parseString(data.toString(), function(err, result) {
                 var body = result.xml;
                 console.log(body);
-                /!*var messageType = body.MsgType[0];
+                /*var messageType = body.MsgType[0];
                 //用户点击菜单响应事件
                 if(messageType === 'event') {
                     var eventName = body.Event[0];
@@ -122,8 +120,8 @@ router.get('/test', function(req, res, next) {
                     //第一次填写URL时确认接口是否有效
                 }else {
                     res.send(echostr);
-                }*!/
-            });*/
+                }*/
+            });
         });
     } else {
         //认证失败，非法操作
