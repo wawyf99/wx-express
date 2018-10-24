@@ -125,7 +125,7 @@ router.get('/test', function(req, res, next) {
         });
     } else {
         //认证失败，非法操作
-        console.log('ok');
+        console.log('cuowu');
     }
 
 });
