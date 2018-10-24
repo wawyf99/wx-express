@@ -30,9 +30,8 @@ router.get('/test', (req, res, next) => {
         encrypt_type = req.query.encrypt_type;
 
         //console.log(msgSignature,timestamp,signature,nonce,encrypt_type);
-        Wx.decryptMsg(msgSignature, timestamp, nonce, req.body).then(res=>{
-            console.log(res);
-        })
+        let s = Wx.decryptMsg(msgSignature, timestamp, nonce, req.body);
+        console.log(s);
         //console.log(req.body);
 });
 
