@@ -100,7 +100,7 @@ router.get('/test', function(req, res, next) {
     //判断是否与你填写TOKEN相等
     console.log(scyptoString);
     if (signature == scyptoString) {
-        res.send("ok");
+        console.log('ok');
 //获取xml数据
         /*req.on("data", function(data) {
             //将xml解析
@@ -122,7 +122,7 @@ router.get('/test', function(req, res, next) {
         });*/
     } else {
         //认证失败，非法操作
-        res.send("Bad Token!");
+        console.log('ok');
     }
 
 });
