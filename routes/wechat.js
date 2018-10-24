@@ -28,8 +28,8 @@ router.get('/test', (req, res, next) => {
         nonce = req.query.nonce,
         encrypt_type = req.query.encrypt_type;
 
-    new WXBizMsgCrypt('MZsJy64XTu1awjsnjsamFSKiJP', 'VzqDMZsJyGqgwmTPu1j8y64X6JzG8f6zdFSKiZA4RKj', 'wx4f68ecdbd31e27e1');
-
+    var s = new WXBizMsgCrypt('MZsJy64XTu1awjsnjsamFSKiJP', 'VzqDMZsJyGqgwmTPu1j8y64X6JzG8f6zdFSKiZA4RKj', 'wx4f68ecdbd31e27e1');
+    console.log(s);
 });
 
 module.exports = router;
