@@ -29,9 +29,11 @@ router.get('/test', (req, res, next) => {
         nonce = req.query.nonce,
         encrypt_type = req.query.encrypt_type;
 
-        console.log(msgSignature,timestamp,signature,nonce,encrypt_type);
-
-        console.log(req.body);
+        //console.log(msgSignature,timestamp,signature,nonce,encrypt_type);
+        Wx.decryptMsg(msgSignature, timestamp, nonce, req.body).then(res=>{
+            console.log(res);
+        })
+        //console.log(req.body);
 });
 
 module.exports = router;
