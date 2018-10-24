@@ -4,7 +4,10 @@ var router = express.Router();
 //var request = require('request');
 const WXBizMsgCrypt = require('wxcrypt');
 var sha1 = require('sha1');
-
+var XMLJS = require('xml2js');
+var parser = new XMLJS.Parser();
+//重组，将json重组为xml
+var builder = new XMLJS.Builder();
 
 /**
  * 微信授权
@@ -102,11 +105,12 @@ router.get('/test', function(req, res, next) {
     if (signature == scyptoString) {
         console.log('ok');
 //获取xml数据
-        /*req.on("data", function(data) {
+        req.on("data", function(data) {
             //将xml解析
             parser.parseString(data.toString(), function(err, result) {
                 var body = result.xml;
-                var messageType = body.MsgType[0];
+                console.log(body);
+                /*var messageType = body.MsgType[0];
                 //用户点击菜单响应事件
                 if(messageType === 'event') {
                     var eventName = body.Event[0];
@@ -117,9 +121,9 @@ router.get('/test', function(req, res, next) {
                     //第一次填写URL时确认接口是否有效
                 }else {
                     res.send(echostr);
-                }
+                }*/
             });
-        });*/
+        });
     } else {
         //认证失败，非法操作
         console.log('ok');
