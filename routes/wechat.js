@@ -51,11 +51,11 @@ router.post('/test', function(req, res, next) {
     if (signature == scyptoString) {
         console.log('okok');
         let encrypt = req.body.xml;
-        let s = WXBizMsgCrypt.decryptMsg(msgSignature, timestamp, nonce, req.body);
-
+        console.log(encrypt);
+        /*let s = WXBizMsgCrypt.decryptMsg(msgSignature, timestamp, nonce, req.body);
         console.log(s);
         console.log('1111111111111111111111111111111111111');
-        console.log(encrypt);
+        console.log(encrypt);*/
     } else {
         //认证失败，非法操作
         console.log('cuowu');
