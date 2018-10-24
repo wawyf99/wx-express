@@ -67,7 +67,7 @@ router.get('/', (req, res, next) => {
 });*/
 
 //微信事件推送的入口
-router.get('/test', function(req, res, next) {
+router.post('/test', function(req, res, next) {
     //获取参数
 /*    var query = req.query;
     //签名
