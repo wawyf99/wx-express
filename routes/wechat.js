@@ -3,8 +3,9 @@ var router = express.Router();
 /*var WXAuth = require('wechat-auth');*/
 //var request = require('request');
 const WXBizMsgCrypt = require('wxcrypt');
+new WXBizMsgCrypt('MZsJy64XTu1awjsnjsamFSKiJP', 'VzqDMZsJyGqgwmTPu1j8y64X6JzG8f6zdFSKiZA4RKj', 'wx4f68ecdbd31e27e1');
 
-let Wx = new WXBizMsgCrypt('MZsJy64XTu1awjsnjsamFSKiJP', 'VzqDMZsJyGqgwmTPu1j8y64X6JzG8f6zdFSKiZA4RKj', 'wx4f68ecdbd31e27e1');
+
 
 /**
  * 微信授权
@@ -28,9 +29,8 @@ router.get('/test', (req, res, next) => {
         signature = req.query.signature,
         nonce = req.query.nonce,
         encrypt_type = req.query.encrypt_type;
-
         //console.log(msgSignature,timestamp,signature,nonce,encrypt_type);
-        let s = Wx.decryptMsg(msgSignature, timestamp, nonce, req.body);
+        let s = WXBizMsgCrypt.decryptMsg(msgSignature, timestamp, nonce, req.body);
         console.log(s);
         //console.log(req.body);
 });
