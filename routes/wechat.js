@@ -58,9 +58,6 @@ router.get('/test', (req, res, next) => {
     });*/
 
 
-console.log(_s);
-
-
         //console.log(msgSignature,timestamp,signature,nonce,encrypt_type);
     /*wx.decryptMsg(msgSignature, timestamp, nonce, req.body).then(res => {
         console.log(res);
