@@ -28,10 +28,10 @@ router.get('/test', (req, res, next) => {
         nonce = req.query.nonce,
         encrypt_type = req.query.encrypt_type;
 
-    var s = new WXBizMsgCrypt('MZsJy64XTu1awjsnjsamFSKiJP', 'VzqDMZsJyGqgwmTPu1j8y64X6JzG8f6zdFSKiZA4RKj', 'wx4f68ecdbd31e27e1');
+    WXBizMsgCrypt('MZsJy64XTu1awjsnjsamFSKiJP', 'VzqDMZsJyGqgwmTPu1j8y64X6JzG8f6zdFSKiZA4RKj', 'wx4f68ecdbd31e27e1').then(res=>{
+        console.log(res);
+    });
 
-    var t = WXBizMsgCrypt.decrypt;
-    console.log(t);
 });
 
 module.exports = router;
