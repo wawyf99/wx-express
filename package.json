@@ -29,6 +29,7 @@
     "session-file-store": "^1.2.0",
     "sha1": "^1.1.1",
     "swig": "^1.4.2",
-    "wechat-auth": "^1.1.2"
+    "wechat-auth": "^1.1.2",
+    "wxcrypt": "^1.4.2"
   }
 }

@@ -56,7 +56,7 @@ app.set('view engine', 'jade');
 
 
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-/*app.use(logger('dev'));
+//app.use(logger('dev'));
 app.use(bodyParser.xml({
     limit: "1MB", // Reject payload bigger than 1 MB
     xmlParseOptions: {
@@ -71,7 +71,7 @@ app.use(bodyParser.xml({
             req.rawBody = buf.toString(encoding || "utf8");
         }
     }
-}));*/
+}));
 
 /**
  * 登录过滤器

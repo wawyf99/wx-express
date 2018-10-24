@@ -1,7 +1,8 @@
 var express = require('express');
 var router = express.Router();
 /*var WXAuth = require('wechat-auth');*/
-var request = require('request');
+//var request = require('request');
+const WXBizMsgCrypt = require('wxcrypt');
 
 
 /**
@@ -21,8 +22,14 @@ router.get('/', (req, res, next) => {
     //console.log(req);
 });
 router.get('/test', (req, res, next) => {
-    console.log(req.query);
-    console.log(req.body);
+    let msgSignature = req.query.msgSignature,
+        timestamp = req.query.timestamp,
+        signature = req.query.signature,
+        nonce = req.query.nonce,
+        encrypt_type = req.query.encrypt_type;
+
+    new WXBizMsgCrypt('MZsJy64XTu1awjsnjsamFSKiJP', 'VzqDMZsJyGqgwmTPu1j8y64X6JzG8f6zdFSKiZA4RKj', 'wx4f68ecdbd31e27e1');
+
 });
 
 module.exports = router;
