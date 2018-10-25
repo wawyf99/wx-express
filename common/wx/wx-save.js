@@ -151,13 +151,14 @@ const WxSave = {
     accredit:function (url) {
         return new Promise(function (resolve, reject) {
             //获取WxConfig;
-            console.log('222222');
             WxSave.getWxConfg().then(function (WxConfig) {
                 console.log(WxConfig);
                 redis.select(5);
                 redis.hgetall(WxConfig.AppId+'-pre_auth_code').then(res => {
-                    if(res.pre_auth_code){;
-
+                    console.log('222222');
+                    console.log(res);
+                    if(res.pre_auth_code){
+                        console.log('44444');
                         console.log(WxConfig);
 
                     var _url = 'https://mp.weixin.qq.com/cgi-bin/componentloginpage?component_appid='+WxConfig.AppId+'&pre_auth_code='+res.pre_auth_code+'&redirect_uri='+WxConfig.redirect_url+'&auth_type=1';
@@ -171,6 +172,7 @@ const WxSave = {
                             resolve(result);
                         })
                     }else{
+                        console.log('33333');
                         //如果没有则获取
                         WxSave.getPre_auth_code().then(res1 => {
                             if(res1){
