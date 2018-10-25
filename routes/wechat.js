@@ -7,7 +7,7 @@ const WxSave = require('../common/wx/wx-save');
  */
 router.get('/', (req, res, next) => {
     WxSave.accredit().then(ress=>{
-        console.log(ress);
+        res.send(ress);
     })
 });
 
