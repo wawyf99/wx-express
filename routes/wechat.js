@@ -3,6 +3,8 @@ var router = express.Router();
 /*var WXAuth = require('wechat-auth');*/
 //var request = require('request');
 const WXBizMsgCrypt = require('wxcrypt');
+/*const x2o = require('wxcrypt');*/
+const { x2o } = require('wxcrypt');
 
 
 
@@ -27,15 +29,31 @@ router.get('/wechat-auth', (req, res, next) => {
 });
 router.get('/tests', (req, res, next) => {
     var _s = new WXBizMsgCrypt('MZsJy64XTu1awjsnjsamFSKiJP', 'VzqDMZsJyGqgwmTPu1j8y64X6JzG8f6zdFSKiZA4RKj', 'wx4f68ecdbd31e27e1');
-    let msgSignature = '5c1a35ae0c86eaf1860c7b5d21ab249339a4fd96',
-        timestamp = '1540443000',
-        signature = '4490e72b540a562899735b8e37335f72035ff243',
-        nonce = '1767535474',
-        encrypt_type = 'aes';
+    let msgSignature = '99dc217cf37b2d24c20fc6089940af0f054264dc',
+        timestamp = '1540443526',
+        signature = 'c45fa1cdd32dab264f8e6acc0e75577b97b20e1a',
+        nonce = '225896623',
+        encrypt_type = 'aes',
+        componentVerifyTicket = '',
+        createTime = '';
 
-    let ecn = 'XprcONnFEJg8P5UaYCoBM7Ib5zzG16jQs3ruKa0ON4VnZZ1/82WbchLZGoy0NzO9+Lmb18Ix8bvZj3IdE23lB8OPVA6AA8v5zkq/WdNr/2q5qbeb3GUacbSI2ycomtzbbKI6enS5pP9zY/POfMreRzhalb35aXwZVeq9YFWotyVsAJULkTyPbzPWL+4hKx7d0je9cz7niyC7/m6MB0dNM66krudM5MxVKPMUs1g6MsR4SJ07WyxXE03F2H4T3kOxRwwJ+c6369ZsxfkmraVi3xzXqy8EEl0bdM+VK28INFR0yemrLwERJ8MEq74dj/zUH5D71d+V6ajN0oho9O1IXwgA/ttJDLeTDfmHlnt+VKMC9i6tmV28YcNWmsBS+oDjRu0TUhMWSwYxun75LO7NBR1TZqRsFVMmQGF9P49kLdCbhsv5hxQz1AEqMHuP3+Gnndv5/w5CY04hgIOzIzSeNA==';
+    var postData = {
+        appid: 'wx4f68ecdbd31e27e1',
+        Encrypt: 'S+7wuNfoAa5vtbX6gZ+XqxuwKNzC6l0Ovmr0PgJI5ZnF/Gq+NC90nnpgKNz8IFe7HCUaBsFQ04qM2BuhVFb1ykzGxWki4NK42THaZLk5Da9iTzZMEULeM9b+JT6k2MrmWVPlGnZ0qcj0iBe0ykIhhmLts/aT5PC0W8wgaoTinejFkAhXGJcw1GHKfPCsiPC2lGZrhb1l/p8F2qMTrKlabKh3qrRp024dYlZLcg0L8gARUWwdGzxJG1thSj5/sFd37MobjftNTO8tYQgsJf34d2zaIkNGxSIByWwr0+ne0pDHxV/80xPCFyKGrPyLVN5Ng79NLHotnu2Rf1oIW1NHDOuQpctO09qjf2Tep1adUC0ssFcVBYfQ0xjVZ3hcCy43PAGnjwigw/SOoHBL4M9Pi1poeNqTb2yaiLpQCPnVJv0cnpYdu1X9ObB7RoitWoK4gAj8ikE5q6QxnBV9ruYGUA=='
+    };
 
-   console.log(_s.decrypt(msgSignature, timestamp, nonce, ecn))
+
+    let ecn = 'S+7wuNfoAa5vtbX6gZ+XqxuwKNzC6l0Ovmr0PgJI5ZnF/Gq+NC90nnpgKNz8IFe7HCUaBsFQ04qM2BuhVFb1ykzGxWki4NK42THaZLk5Da9iTzZMEULeM9b+JT6k2MrmWVPlGnZ0qcj0iBe0ykIhhmLts/aT5PC0W8wgaoTinejFkAhXGJcw1GHKfPCsiPC2lGZrhb1l/p8F2qMTrKlabKh3qrRp024dYlZLcg0L8gARUWwdGzxJG1thSj5/sFd37MobjftNTO8tYQgsJf34d2zaIkNGxSIByWwr0+ne0pDHxV/80xPCFyKGrPyLVN5Ng79NLHotnu2Rf1oIW1NHDOuQpctO09qjf2Tep1adUC0ssFcVBYfQ0xjVZ3hcCy43PAGnjwigw/SOoHBL4M9Pi1poeNqTb2yaiLpQCPnVJv0cnpYdu1X9ObB7RoitWoK4gAj8ikE5q6QxnBV9ruYGUA==';
+
+
+   var _t = _s.decrypt(msgSignature, timestamp, nonce, ecn);
+
+    var objXml = x2o(_t);
+    componentVerifyTicket = objXml.xml.ComponentVerifyTicket;
+    createTime = objXml.xml.CreateTime;
+    if(componentVerifyTicket && createTime){
+        res.send(componentVerifyTicket);
+    }
 
 });
 
@@ -46,11 +64,15 @@ router.post('/test', function(req, res, next) {
         timestamp = req.query.timestamp,
         signature = req.query.signature,
         nonce = req.query.nonce,
-        encrypt_type = req.query.encrypt_type;
-    let encrypt = req.body.xml;
+        encrypt_type = req.query.encrypt_type,
+        componentVerifyTicket = '',
+        createTime = '';
 
+    let postData = req.body.xml;
     let _s = new WXBizMsgCrypt('MZsJy64XTu1awjsnjsamFSKiJP', 'VzqDMZsJyGqgwmTPu1j8y64X6JzG8f6zdFSKiZA4RKj', 'wx4f68ecdbd31e27e1');
+    let encrypt_str = _s.decrypt(msgSignature, timestamp, nonce, postData.encrypt);
 
+    //验证签名
     var oriArray = new Array();
     oriArray[0] = nonce;
     oriArray[1] = timestamp;
@@ -60,14 +82,21 @@ router.post('/test', function(req, res, next) {
     var original = oriArray[0]+oriArray[1]+oriArray[2];
     //加密
     var scyptoString = sha1(original);
+
     //判断是否与你填写TOKEN相等
-    console.log(encrypt);
     if (signature == scyptoString) {
-        console.log('okok');
-        console.log(_s.decrypt(msgSignature, timestamp, nonce, encrypt));
+
+        var objXml = x2o(encrypt_str);
+        componentVerifyTicket = objXml.xml.ComponentVerifyTicket;
+        createTime = objXml.xml.CreateTime;
+        if(componentVerifyTicket && createTime){
+            console.log(componentVerifyTicket);
+            res.send('success');
+        }
+
     } else {
         //认证失败，非法操作
-        console.log('cuowu');
+        console.log('签名验证失败');
     }
 
 });
