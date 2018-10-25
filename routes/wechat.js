@@ -6,11 +6,12 @@ const WxSave = require('../common/wx/wx-save');
  * 微信授权
  */
 router.get('/', (req, res, next) => {
-    WxSave.accredit().then(ress=>{
+    console.log('222222');
+/*    WxSave.accredit().then(ress=>{
         console.log(ress);
-/*        response.writeHead(200,{"Content-Type":"text/html"});
-        response.write(ress.toString());*/
-    })
+/!*        response.writeHead(200,{"Content-Type":"text/html"});
+        response.write(ress.toString());*!/
+    })*/
 });
 
 router.get('/test', (req, res, next) => {
