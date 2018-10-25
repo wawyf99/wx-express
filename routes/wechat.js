@@ -1,53 +1,48 @@
 var express = require('express');
 var router = express.Router();
-/*var WXAuth = require('wechat-auth');*/
-//var request = require('request');
-const WXBizMsgCrypt = require('wxcrypt');
-const { x2o } = require('wxcrypt');
-var sha1 = require('sha1');
-/*var XMLJS = require('xml2js');
-var parser = new XMLJS.Parser();
-//重组，将json重组为xml
-var builder = new XMLJS.Builder();*/
-
-var Redis = require('ioredis');
-var redis = new Redis();
-
 const WxSave = require('../common/wx/wx-save');
 
 /**
  * 微信授权
  */
-router.get('/wechat-auth', (req, res, next) => {
-    //console.log(req);
-    request.post({url:'https://api.weixin.qq.com/cgi-bin/component/api_component_token', form: {
-            "component_appid":"wx4f68ecdbd31e27e1" ,
-            "component_appsecret": "decadbad385d1194afd0c24c036db522",
-            "component_verify_ticket": "123123"
-        }}, function(err,httpResponse,body){
-        console.log(body);
+router.get('/', (req, res, next) => {
+    WxSave.accredit().then(ress=>{
+        console.log(ress);
+/*        response.writeHead(200,{"Content-Type":"text/html"});
+        response.write(ress.toString());*/
     })
 });
-router.get('/tests', (req, res, next) => {
-    let msgSignature = '814793ee193d671e431411448175c0ff483c4e29',
-        timestamp = '1540453088',
-        signature = '8d92bca7e176c63941225a60e942039fc791539e',
-        nonce = '2022206236',
+
+router.get('/test', (req, res, next) => {
+    let msgSignature = 'cf75c196dc2532c222bccacb6b8a7ec074a0c097',
+        timestamp = '1540465774',
+        signature = 'c60ffb048a598e09e95bc5737eb81f19c1a0c350',
+        nonce = '922414274',
         encrypt_type = 'aes',
         componentVerifyTicket = '',
         createTime = '';
 
     var postData = {
         appid: 'wx4f68ecdbd31e27e1',
-        Encrypt: 'S+7wuNfoAa5vtbX6gZ+XqxuwKNzC6l0Ovmr0PgJI5ZnF/Gq+NC90nnpgKNz8IFe7HCUaBsFQ04qM2BuhVFb1ykzGxWki4NK42THaZLk5Da9iTzZMEULeM9b+JT6k2MrmWVPlGnZ0qcj0iBe0ykIhhmLts/aT5PC0W8wgaoTinejFkAhXGJcw1GHKfPCsiPC2lGZrhb1l/p8F2qMTrKlabKh3qrRp024dYlZLcg0L8gARUWwdGzxJG1thSj5/sFd37MobjftNTO8tYQgsJf34d2zaIkNGxSIByWwr0+ne0pDHxV/80xPCFyKGrPyLVN5Ng79NLHotnu2Rf1oIW1NHDOuQpctO09qjf2Tep1adUC0ssFcVBYfQ0xjVZ3hcCy43PAGnjwigw/SOoHBL4M9Pi1poeNqTb2yaiLpQCPnVJv0cnpYdu1X9ObB7RoitWoK4gAj8ikE5q6QxnBV9ruYGUA=='
+        encrypt: 'jjG6mOScIT1SkiDTjcSzmjsYoCkkLqtHk/dRR5llFywhOg+2m89MIMz6lYK401UzdakZTkkruOz7OSr0X/d2uajgjKzcXWaQa/eyGFyM6NjW/BVDnUDImSibIm85KD0b+sjrN3UoVbv9KSpSpWreyUzLYrbsCPj7thTLwEJGqLgx+o6f5R5i6A+TUu0knsDPMS7PcD3Ce1DsbQgULjhL/3s9mky8+rEn6wFLHpWG/hrCDlzawz94AuWQ6SkD5g7k+367crAfUL3cqKpdB6pp1k08swOz/0GL+/tiKVFZaAEyTxldmXuttL/RZVFUBcO64+uxWGDnrPqCx7KsGZjZoQUlj7braP0hhmKGgZjsyCBzvk80LdA+5YIu+42HZ7igTgnQi2V2h5e99TUiweOYIikrMqcu6QBeO8kVv9iorXn10j3UX13Yl40u/s/3diX2RhOcvLmScw+3jY9Wr9isdQ=='
     };
-
-
+    WxSave.getComponentVerifyTicket(msgSignature, timestamp, signature, nonce, encrypt_type, postData).then(result=>{
+        res.send(result);
+    })
 });
+router.get('/tests', (req, res, next) => {
+    WxSave.accredit().then(res=>{
+        console.log(res);
+    })
+});
+router.get('/redisWrite',(req,res,next) => {
+    WxSave.setRedis().then(res=>{
+        console.log(res);
+    })
+})
 
 //微信事件推送的入口
 router.post('/receive', function(req, res, next) {
-
     //获取参数
     let msgSignature = req.query.msgSignature,
         timestamp = req.query.timestamp,
@@ -55,11 +50,10 @@ router.post('/receive', function(req, res, next) {
         nonce = req.query.nonce,
         encrypt_type = req.query.encrypt_type;
     let postData = req.body.xml;
+
     console.log(postData);
     WxSave.getComponentVerifyTicket(msgSignature, timestamp, signature, nonce, encrypt_type, postData).then(result=>{
         res.send(result);
     })
-
-
 });
 module.exports = router;
