@@ -48,11 +48,7 @@ router.post('/test', function(req, res, next) {
         nonce = req.query.nonce,
         encrypt_type = req.query.encrypt_type;
 
-    var _s = new WXBizMsgCrypt('MZsJy64XTu1awjsnjsamFSKiJP', 'VzqDMZsJyGqgwmTPu1j8y64X6JzG8f6zdFSKiZA4RKj', 'wx4f68ecdbd31e27e1');
-
-    let ecn = 'XprcONnFEJg8P5UaYCoBM7Ib5zzG16jQs3ruKa0ON4VnZZ1/82WbchLZGoy0NzO9+Lmb18Ix8bvZj3IdE23lB8OPVA6AA8v5zkq/WdNr/2q5qbeb3GUacbSI2ycomtzbbKI6enS5pP9zY/POfMreRzhalb35aXwZVeq9YFWotyVsAJULkTyPbzPWL+4hKx7d0je9cz7niyC7/m6MB0dNM66krudM5MxVKPMUs1g6MsR4SJ07WyxXE03F2H4T3kOxRwwJ+c6369ZsxfkmraVi3xzXqy8EEl0bdM+VK28INFR0yemrLwERJ8MEq74dj/zUH5D71d+V6ajN0oho9O1IXwgA/ttJDLeTDfmHlnt+VKMC9i6tmV28YcNWmsBS+oDjRu0TUhMWSwYxun75LO7NBR1TZqRsFVMmQGF9P49kLdCbhsv5hxQz1AEqMHuP3+Gnndv5/w5CY04hgIOzIzSeNA==';
-
-    console.log(_s);
+    let _s = new WXBizMsgCrypt('MZsJy64XTu1awjsnjsamFSKiJP', 'VzqDMZsJyGqgwmTPu1j8y64X6JzG8f6zdFSKiZA4RKj', 'wx4f68ecdbd31e27e1');
 
     var oriArray = new Array();
     oriArray[0] = nonce;
@@ -65,13 +61,9 @@ router.post('/test', function(req, res, next) {
     var scyptoString = sha1(original);
     //判断是否与你填写TOKEN相等
     if (signature == scyptoString) {
-        console.log('okok');
         let encrypt = req.body.xml;
-        console.log(encrypt);
-        /*let s = WXBizMsgCrypt.decryptMsg(msgSignature, timestamp, nonce, req.body);
-        console.log(s);
-        console.log('1111111111111111111111111111111111111');
-        console.log(encrypt);*/
+        console.log(_s.decrypt(msgSignature, timestamp, nonce, encrypt));
+        console.log('okok');
     } else {
         //认证失败，非法操作
         console.log('cuowu');
