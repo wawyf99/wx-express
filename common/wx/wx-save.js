@@ -156,14 +156,16 @@ const WxSave = {
                 redis.hgetall(WxConfig.AppId+'-pre_auth_code').then(res => {
                     if(res.pre_auth_code){;
 
-                    var _url = 'https://mp.weixin.qq.com/cgi-bin/componentloginpage?component_appid='+WxConfig.AppId+'&pre_auth_code='+res.pre_auth_code+'&redirect_uri='+WxConfig.redirect_url+'&auth_type=1';
+                        console.log(WxConfig);
 
+                    var _url = 'https://mp.weixin.qq.com/cgi-bin/componentloginpage?component_appid='+WxConfig.AppId+'&pre_auth_code='+res.pre_auth_code+'&redirect_uri='+WxConfig.redirect_url+'&auth_type=1';
+                        console.log(_url);
                         request.get({
                             url: _url,
                         }, function (err, httpResponse, result) {
                             //result = JSON.parse(result);
                             //console.log(result);
-                            console.log(_url);
+
                             resolve(result);
                         })
                     }else{
