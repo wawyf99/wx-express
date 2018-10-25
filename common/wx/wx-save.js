@@ -163,6 +163,7 @@ const WxSave = {
                         }, function (err, httpResponse, result) {
                             //result = JSON.parse(result);
                             //console.log(result);
+                            console.log(_url);
                             resolve(result);
                         })
                     }else{
