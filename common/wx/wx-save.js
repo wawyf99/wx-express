@@ -85,6 +85,8 @@ const WxSave = {
                             url: 'https://api.weixin.qq.com/cgi-bin/component/api_component_token',
                             form: data
                         }, function (err, httpResponse, result) {
+                            console.log(err);
+                            console.log(result);
                             result = JSON.parse(result);
                             //console.log(result);
                             if (result.component_access_token) {
