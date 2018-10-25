@@ -12,10 +12,10 @@ router.get('/', (req, res, next) => {
 });
 
 router.get('/test', (req, res, next) => {
-    let msgSignature = 'cf75c196dc2532c222bccacb6b8a7ec074a0c097',
-        timestamp = '1540465774',
-        signature = 'c60ffb048a598e09e95bc5737eb81f19c1a0c350',
-        nonce = '922414274',
+    let msgSignature = '51d6be7499d1a1ba22a7ef57f680c09987c04867',
+        timestamp = '1540486032',
+        signature = 'd0237d92ce129a7703f00d6324739a9d82fb0c1b',
+        nonce = '1933436032',
         encrypt_type = 'aes',
         componentVerifyTicket = '',
         createTime = '';
