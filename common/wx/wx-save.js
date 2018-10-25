@@ -16,7 +16,7 @@ const WxSave = {
                 let componentVerifyTicket = '',
                     createTime = '';
 
-                console.log(postData);
+                //console.log(postData);
                 //验证签名
                 let oriArray = new Array();
                 oriArray[0] = nonce;
