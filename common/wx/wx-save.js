@@ -157,6 +157,11 @@ const WxSave = {
                 redis.hgetall(WxConfig.AppId+'-pre_auth_code').then(res => {
                     console.log('222222');
                     console.log(res);
+
+                    redis.hgetall(WxConfig.AppId+'-componentVerifyTicket').then(resss =>{
+                        console.log(resss)
+                    })
+
                     if(res.pre_auth_code){
                         console.log('44444');
                         console.log(WxConfig);
