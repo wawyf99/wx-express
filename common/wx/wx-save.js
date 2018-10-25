@@ -15,7 +15,6 @@ const WxSave = {
                 let _s = new WXBizMsgCrypt(WxConfig.Token, WxConfig.key, WxConfig.AppId);
                 let componentVerifyTicket = '',
                     createTime = '';
-
                 //console.log(postData);
                 //验证签名
                 let oriArray = new Array();
@@ -28,6 +27,7 @@ const WxSave = {
                 //加密
                 let scyptoString = sha1(original);
                 //判断是否与你填写TOKEN相等
+                console.log(postData.encrypt);
                 if (signature == scyptoString) {
                     let encrypt_str = _s.decrypt(msgSignature, timestamp, nonce, postData.encrypt);
                     let objXml = x2o(encrypt_str);
