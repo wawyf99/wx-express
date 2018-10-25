@@ -3,16 +3,15 @@ var router = express.Router();
 /*var WXAuth = require('wechat-auth');*/
 //var request = require('request');
 const WXBizMsgCrypt = require('wxcrypt');
-/*const x2o = require('wxcrypt');*/
 const { x2o } = require('wxcrypt');
-
-
-
 var sha1 = require('sha1');
-var XMLJS = require('xml2js');
+/*var XMLJS = require('xml2js');
 var parser = new XMLJS.Parser();
 //重组，将json重组为xml
-var builder = new XMLJS.Builder();
+var builder = new XMLJS.Builder();*/
+
+var Redis = require('ioredis');
+var redis = new Redis();
 
 /**
  * 微信授权
@@ -52,22 +51,26 @@ router.get('/tests', (req, res, next) => {
     componentVerifyTicket = objXml.xml.ComponentVerifyTicket;
     createTime = objXml.xml.CreateTime;
     if(componentVerifyTicket && createTime){
-        res.send(componentVerifyTicket);
+        redis.select(5);
+        //redis.hmset('key', 100, 'EX', 10);
+        redis.hmset('wx',new Map([['createTime', createTime], ['componentVerifyTicket', componentVerifyTicket]]), function (err, result) {
+            if(result == 'OK'){
+                redis.expire('wx',600);
+                res.send('success');
+            }
+        });
     }
-
 });
 
 //微信事件推送的入口
-router.post('/test', function(req, res, next) {
+router.post('/receive', function(req, res, next) {
     //获取参数
     let msgSignature = req.query.msgSignature,
         timestamp = req.query.timestamp,
         signature = req.query.signature,
         nonce = req.query.nonce,
-        encrypt_type = req.query.encrypt_type,
         componentVerifyTicket = '',
         createTime = '';
-
     let postData = req.body.xml;
     let _s = new WXBizMsgCrypt('MZsJy64XTu1awjsnjsamFSKiJP', 'VzqDMZsJyGqgwmTPu1j8y64X6JzG8f6zdFSKiZA4RKj', 'wx4f68ecdbd31e27e1');
     let encrypt_str = _s.decrypt(msgSignature, timestamp, nonce, postData.encrypt);
@@ -85,15 +88,19 @@ router.post('/test', function(req, res, next) {
 
     //判断是否与你填写TOKEN相等
     if (signature == scyptoString) {
-
         var objXml = x2o(encrypt_str);
         componentVerifyTicket = objXml.xml.ComponentVerifyTicket;
         createTime = objXml.xml.CreateTime;
         if(componentVerifyTicket && createTime){
-            console.log(componentVerifyTicket);
-            res.send('success');
+            redis.select(5);
+            //redis.hmset('key', 100, 'EX', 10);
+            redis.hmset('wx',new Map([['createTime', createTime], ['componentVerifyTicket', componentVerifyTicket]]), function (err, result) {
+                if(result == 'OK'){
+                    redis.expire('wx',600);
+                    res.send('success');
+                }
+            });
         }
-
     } else {
         //认证失败，非法操作
         console.log('签名验证失败');
