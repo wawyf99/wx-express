@@ -16,6 +16,7 @@ const WxSave = {
                 let componentVerifyTicket = '',
                     createTime = '';
 
+                console.log(postData);
                 //验证签名
                 let oriArray = new Array();
                 oriArray[0] = nonce;
@@ -30,7 +31,7 @@ const WxSave = {
                 if (signature == scyptoString) {
                     let encrypt_str = _s.decrypt(msgSignature, timestamp, nonce, postData.encrypt);
                     let objXml = x2o(encrypt_str);
-                    console.log(objXml);
+                    //console.log(objXml);
                     componentVerifyTicket = objXml.xml.ComponentVerifyTicket;
                     createTime = objXml.xml.CreateTime;
                     if (componentVerifyTicket && createTime) {
