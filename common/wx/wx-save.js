@@ -151,7 +151,9 @@ const WxSave = {
     accredit:function (url) {
         return new Promise(function (resolve, reject) {
             //获取WxConfig;
+            console.log('222222');
             WxSave.getWxConfg().then(function (WxConfig) {
+                console.log(WxConfig);
                 redis.select(5);
                 redis.hgetall(WxConfig.AppId+'-pre_auth_code').then(res => {
                     if(res.pre_auth_code){;
