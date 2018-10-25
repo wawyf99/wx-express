@@ -70,10 +70,11 @@ const WxSave = {
             WxSave.getWxConfg().then(function (WxConfig) {
                 //从redis中获取ticket
                 redis.select(5);
+                console.log('7');
                 redis.hgetall(WxConfig.AppId+'-componentVerifyTicket').then(res => {
-                    console.log(res);
+                    console.log('8');
                     if (res.componentVerifyTicket) {
-
+                        console.log('9');
                         var data = {
                             "component_appid": WxConfig.AppId,
                             "component_appsecret": WxConfig.AppSecret,
@@ -111,8 +112,9 @@ const WxSave = {
                 redis.select(5);
 
                 redis.hgetall(WxConfig.AppId+'-component_access_token').then(res => {
-                    console.log(res);
+                    console.log('4');
                     if (res.component_access_token) {
+                        console.log('5');
                         //console.log(3);
                         //如果有
                         //console.log(WxConfig.AppId);
@@ -137,6 +139,7 @@ const WxSave = {
                             }
                         })
                     } else {
+                        console.log('6');
                         //如果没有则获取
                         WxSave.getComponent_access_token().then(res1 => {
                             if (res1) {
@@ -155,13 +158,11 @@ const WxSave = {
         return new Promise(function (resolve, reject) {
             //获取WxConfig;
             WxSave.getWxConfg().then(function (WxConfig) {
-                console.log(WxConfig);
                 redis.select(5);
                 redis.hgetall(WxConfig.AppId+'-pre_auth_code').then(res => {
-                    console.log('222222');
-                    console.log(res);
+                    console.log('1');
                     if(res.pre_auth_code){
-                        console.log('44444');
+                        console.log('2');
                         console.log(WxConfig);
 
                     var _url = 'https://mp.weixin.qq.com/cgi-bin/componentloginpage?component_appid='+WxConfig.AppId+'&pre_auth_code='+res.pre_auth_code+'&redirect_uri='+WxConfig.redirect_url+'&auth_type=1';
@@ -175,7 +176,7 @@ const WxSave = {
                             resolve(result);
                         })
                     }else{
-                        console.log('33333');
+                        console.log('3');
                         //如果没有则获取
                         WxSave.getPre_auth_code().then(res1 => {
                             if(res1){
