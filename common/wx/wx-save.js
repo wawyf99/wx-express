@@ -198,7 +198,7 @@ const WxSave = {
                     ['AppSecret','485988360bca7a20b3931465f922fd09'],
                     ['Token', 'MZsJy64XTu1awjsnjsamFSKiJP'],
                     ['key', 'VzqDMZsJyGqgwmTPu1j8y64X6JzG8f6zdFSKiZA4RKj'],
-                    ['redirect_url','http://wx.api.rzzc.ltd/wechat/wx4f68ecdbd31e27e1']
+                    ['redirect_url','wx.admin.rzzc.ltd/accredit/wx4f68ecdbd31e27e1']
                 ]), function (err, result) {
                     resolve(result);
                 });
