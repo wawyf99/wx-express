@@ -49,8 +49,8 @@ router.post('/receive', function(req, res, next) {
         encrypt_type = req.query.encrypt_type;
     let postData = req.body.xml;
     console.log(postData);
-    WxSave.getComponentVerifyTicket(msgSignature, timestamp, signature, nonce, encrypt_type, postData).then(result=>{
+    /*WxSave.getComponentVerifyTicket(msgSignature, timestamp, signature, nonce, encrypt_type, postData).then(result=>{
         res.send(result);
-    })
+    })*/
 });
 module.exports = router;
