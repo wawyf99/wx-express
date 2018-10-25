@@ -85,8 +85,8 @@ const WxSave = {
                             url: 'https://api.weixin.qq.com/cgi-bin/component/api_component_token',
                             form: data
                         }, function (err, httpResponse, result) {
-                            console.log(err);
-                            console.log(result);
+                            //console.log(err);
+                            //console.log(result);
                             result = JSON.parse(result);
                             //console.log(result);
                             if (result.component_access_token) {
@@ -165,8 +165,6 @@ const WxSave = {
                     console.log('1');
                     if(res.pre_auth_code){
                         console.log('2');
-                        console.log(WxConfig);
-
                     var _url = 'https://mp.weixin.qq.com/cgi-bin/componentloginpage?component_appid='+WxConfig.AppId+'&pre_auth_code='+res.pre_auth_code+'&redirect_uri='+WxConfig.redirect_url+'&auth_type=1';
                         console.log(_url);
                         request.get({
@@ -198,7 +196,7 @@ const WxSave = {
                     ['AppSecret','485988360bca7a20b3931465f922fd09'],
                     ['Token', 'MZsJy64XTu1awjsnjsamFSKiJP'],
                     ['key', 'VzqDMZsJyGqgwmTPu1j8y64X6JzG8f6zdFSKiZA4RKj'],
-                    ['redirect_url','wx.admin.rzzc.ltd/accredit/wx4f68ecdbd31e27e1']
+                    ['redirect_url','http//wx.admin.rzzc.ltd/accredit/wx4f68ecdbd31e27e1']
                 ]), function (err, result) {
                     resolve(result);
                 });
