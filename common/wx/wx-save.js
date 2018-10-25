@@ -71,7 +71,9 @@ const WxSave = {
                 //从redis中获取ticket
                 redis.select(5);
                 redis.hgetall(WxConfig.AppId+'-componentVerifyTicket').then(res => {
+                    console.log(res);
                     if (res.componentVerifyTicket) {
+
                         var data = {
                             "component_appid": WxConfig.AppId,
                             "component_appsecret": WxConfig.AppSecret,
@@ -107,8 +109,9 @@ const WxSave = {
             WxSave.getWxConfg().then(function (WxConfig) {
                 //从redis中获取component_access_token
                 redis.select(5);
-                redis.hgetall(WxConfig.AppId+'-component_access_token').then(res => {
 
+                redis.hgetall(WxConfig.AppId+'-component_access_token').then(res => {
+                    console.log(res);
                     if (res.component_access_token) {
                         //console.log(3);
                         //如果有
@@ -157,11 +160,6 @@ const WxSave = {
                 redis.hgetall(WxConfig.AppId+'-pre_auth_code').then(res => {
                     console.log('222222');
                     console.log(res);
-
-                    redis.hgetall(WxConfig.AppId+'-componentVerifyTicket').then(resss =>{
-                        console.log(resss)
-                    })
-
                     if(res.pre_auth_code){
                         console.log('44444');
                         console.log(WxConfig);
