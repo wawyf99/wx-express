@@ -1,47 +1,32 @@
-const
-    connection = require('../common/db'),
-    wechat = require('../common/wechat/wechat-util');
+const connection = require('../common/db');
+db = new connection('express');
 /**
- * 关注用户
+ * 获取配置
  */
-exports.subscribe = (openid, user) => {
-    accountBindServer.find({
-        where: {
-            unionid: user.unionid
+exports.getWxConfig = (id, callback) => {
+    console.log(id);
+    db.query("SELECT * FROM express.T_Wx WHERE id = ?", {
+        replacements: [id]
+    }).spread((results) => {
+        let result = {};
+        if(results){
+            result.status = true;
+            result.data = results[0];
+            callback(result);
         }
-    }).then(result => {
-        var uid = 0;
-        if (result) uid = result.uid;
-        if (user) {
-            var url = user.headimgurl.replace(/[\\]/g, '');
-            db.query('call sp_account_logon_third_party(?,?,?,?,?,?,?,?,?,?,?)', {
-                replacements: [1, 2, openid, user.unionid, user.nickname, url, user.sex, 1001, '1.0.0', uid, ''],
-            }).spread(r => {});
-        }
-    })
-};
-
-/*
-* 获取亲友圈信息
-* 获取当前用户信息
-* */
-exports.getShareInfo = (accountId, clubId, openId, callback) => {
-    db.query('CALL game.SP_Get_Share_Info(?,?,?)', {
-        replacements: [accountId, clubId, openId],
-    }).spread((results, metadata) => {
-        callback(results);
     });
 };
 
-/**
- * 根据openid获取用户信息
- * @param {string} openId
- */
-exports.findByOpenId = (openId, callback) => {
-    db.query("SELECT a.* FROM `account` AS a LEFT JOIN `account_bind` AS b ON a.uid=b.`uid`  WHERE b.`unionid`=?", {
-        replacements: [openId],
-        type: db.QueryTypes.SELECT
-    }).spread(result => {
-        callback(result);
-    })
-}
+//获取公众号关联的ID
+exports.getWxId = (appid, callback) => {
+    db.query("SELECT * FROM express.T_Wx WHERE app_id = ?", {
+        replacements: [appid]
+    }).spread((results) => {
+        let result = {};
+        if(results){
+            result.status = true;
+            result.data = results[0];
+            callback(result);
+        }
+    });
+};

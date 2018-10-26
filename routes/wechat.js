@@ -1,14 +1,22 @@
 var express = require('express');
 var router = express.Router();
 const WxSave = require('../common/wx/wx-save');
+const wechatServer = require('../server/wechat-server');
 
 /**
  * 微信授权
  */
 router.get('/', (req, res, next) => {
-    WxSave.accredit().then(ress=>{
-        res.send(ress);
+    let id = req.query.id;
+    wechatServer.getWxConfig(id, result => {
+        if(result.status){
+            WxSave.WxConfig = result.data;
+            WxSave.accredit().then(ress=>{
+                res.send(ress);
+            })
+        }
     })
+
 });
 
 router.get('/test', (req, res, next) => {
@@ -21,11 +29,17 @@ router.get('/test', (req, res, next) => {
         createTime = '';
 
     var postData = {
-        appid: 'wx4f68ecdbd31e27e1',
+        appid: 'wx7566be2c0098c99c',
         encrypt: 'EKFt9mGrdCFDSJy5npheLyu1HGS2pFKO8Dx2z6inXF7KfWAqc6TN/5GI9Zc0M/rqgwexVSqtgyMrudhN0uDWBkg3p0KS0qUD+Q+NFp/1RoLPV/vltGoVbZUbAcseFcXb9tWVp4BLWUtHBqnjnHNyu0Gl+bQIQIQINi9M/RngXunChky0htwKPsSlqzgVv4K9Gvppa9k6EOm+fAq++ebXYqbWifiSFqz7KHlUpM87dYSc4y3AR3W31fqkpa7IqX08yKl1VPOnaSX+hEP4NkGPo0OdgV6XKNU1Unq0ElKZBt4sEHSG3CvjbUjPsh9UKznV00gzzCLhzYc809cg54CybY4isKlTsdZ3+kBNEYJQFaYB3cjps6+NCLCnzuTBtz+f8oYXrxhi0uSTPW5fbEwwHR5DiWwJiw0xmexlKlkVf4usRiNWJ92EhYg/PcqB0JXmIVCJ+BTbiyLRLSGjN1h6QQ=='
     };
-    WxSave.getComponentVerifyTicket(signature, timestamp, nonce, encrypt_type, msg_signature, postData).then(result=>{
-        res.send(result);
+    let appid = postData.appid;
+    wechatServer.getWxId(appid, result => {
+        if(result.status){
+            WxSave.WxConfig = result.data;
+            WxSave.getComponentVerifyTicket(signature, timestamp, nonce, encrypt_type, msg_signature, postData, ).then(result=>{
+                res.send(result);
+            })
+        }
     })
 });
 router.get('/tests', (req, res, next) => {
@@ -34,8 +48,11 @@ router.get('/tests', (req, res, next) => {
     })
 });
 router.get('/redisWrite',(req,res,next) => {
-    WxSave.setRedis().then(res=>{
-        console.log(res);
+    let appid = 'wx7566be2c0098c99c';
+
+    wechatServer.getWxId(appid, result => {
+        console.log(result);
+        res.send(result.id);
     })
 })
 
@@ -48,8 +65,28 @@ router.post('/receive', function(req, res, next) {
         encrypt_type = req.query.encrypt_type,
         msg_signature = req.query.msg_signature;
     let postData = req.body.xml;
-    WxSave.getComponentVerifyTicket(signature, timestamp, nonce, encrypt_type, msg_signature, postData).then(result=>{
+    //根据AppId从数据库取得id;
+    let appid = postData.appid;
+    wechatServer.getWxId(appid, result => {
+        if(result.status){
+            WxSave.WxConfig = result.data;
+            WxSave.getComponentVerifyTicket(signature, timestamp, nonce, encrypt_type, msg_signature, postData, ).then(result=>{
+                res.send(result);
+            })
+        }
+    })
+
+
+
+});
+
+//更新token
+router.post('/updateToken', function(req, res, next) {
+    let AppId = req.body.AppId,
+        AuthCode = req.body.AuthCode;
+    WxSave.getAuthorizerToken(AppId, AuthCode).then(result=>{
         res.send(result);
     })
 });
+
 module.exports = router;
