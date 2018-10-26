@@ -12,17 +12,17 @@ router.get('/', (req, res, next) => {
 });
 
 router.get('/test', (req, res, next) => {
-    let msgSignature = '3485956fb1299a32a82e4fd986ae318ce7ab43f6',
-        timestamp = '1540489338',
-        signature = '6532ea6c26a978c0207abeca883cca808cd4a29f',
-        nonce = '450284446',
+    let msgSignature = 'e0a9879df3a639501233c419d046dad53255dd6b',
+        timestamp = '1540525716',
+        signature = '001190808be8b13fffeca998f7ce5e96ac3c5f0b',
+        nonce = '1897889720',
         encrypt_type = 'aes',
         componentVerifyTicket = '',
         createTime = '';
 
     var postData = {
         appid: 'wx4f68ecdbd31e27e1',
-        encrypt: 'LOQ8DTZi4+1sZD7uGyt08pyZKtRhIIvmESeMYhul6elPZwvFw3cx4UyJvaVo6+6bHo+CUNKErg5a2Z64/FFCRFsYFpWYT7GxuAALz7xPZr6F0q2HZ5XoE8yq45CIDKfz01p+b5jFy68hOmX8VZ3FNKrNC+11cP2TkdbMCRgNLHOW368ZTxVdE7XQRw35iRLl2TchSHuNVnoKsdk2sO3r8JlzUNsSNDKqA6SLiXYgu0f19b2Z0WmQDei45GLg5x7SXqq+neMV5qXvIpTeUUI4jhfjWNY/LFFFm0yMammrOUSjEOB2DFPcMVqkQhnUx+DuxGALHAhBkfILHsROwGaAARYNnsoNmQbeMMofjOL397KMDGJJT+jxuD/ssLP6wzJL7e2Og7UaXaeiHFSP2+ZGvovep0gF3FIBVWl/z+DYbmab0wgu0N9Tnck5kd3J4HQObpf6CJ6teiC7HmNNCy3yFA=='
+        encrypt: 'EKFt9mGrdCFDSJy5npheLyu1HGS2pFKO8Dx2z6inXF7KfWAqc6TN/5GI9Zc0M/rqgwexVSqtgyMrudhN0uDWBkg3p0KS0qUD+Q+NFp/1RoLPV/vltGoVbZUbAcseFcXb9tWVp4BLWUtHBqnjnHNyu0Gl+bQIQIQINi9M/RngXunChky0htwKPsSlqzgVv4K9Gvppa9k6EOm+fAq++ebXYqbWifiSFqz7KHlUpM87dYSc4y3AR3W31fqkpa7IqX08yKl1VPOnaSX+hEP4NkGPo0OdgV6XKNU1Unq0ElKZBt4sEHSG3CvjbUjPsh9UKznV00gzzCLhzYc809cg54CybY4isKlTsdZ3+kBNEYJQFaYB3cjps6+NCLCnzuTBtz+f8oYXrxhi0uSTPW5fbEwwHR5DiWwJiw0xmexlKlkVf4usRiNWJ92EhYg/PcqB0JXmIVCJ+BTbiyLRLSGjN1h6QQ=='
     };
     WxSave.getComponentVerifyTicket(msgSignature, timestamp, signature, nonce, encrypt_type, postData).then(result=>{
         res.send(result);
