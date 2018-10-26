@@ -25,12 +25,13 @@ const WxSave = {
                 let original = oriArray[0] + oriArray[1] + oriArray[2];
                 //加密
                 let scyptoString = sha1(original);
+                let encryptStr = postData.encrypt;
                 //判断是否与你填写TOKEN相等
-                console.log(postData);
+                console.log(encryptStr);
                 console.log(signature);
                 console.log(scyptoString);
                 if (signature == scyptoString) {
-                    let encrypt_str = _s.decrypt(msgSignature, timestamp, nonce, postData.encrypt);
+                    let encrypt_str = _s.decrypt(msgSignature, timestamp, nonce, encryptStr);
                     let objXml = x2o(encrypt_str);
                     //console.log(objXml);
                     componentVerifyTicket = objXml.xml.ComponentVerifyTicket;
@@ -152,6 +153,7 @@ const WxSave = {
         return new Promise(function (resolve, reject) {
             //获取WxConfig;
             WxSave.getWxConfg().then(function (WxConfig) {
+                console.log(1);
                 redis.select(5);
                 redis.hgetall(WxConfig.AppId+'_pre_auth_code').then(res => {
                     if(res.pre_auth_code){
