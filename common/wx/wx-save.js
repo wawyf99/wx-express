@@ -4,6 +4,8 @@ var sha1 = require('sha1');
 var Redis = require('ioredis');
 var redis = new Redis();
 var request = require('request');
+const connection = require('../db');
+db = new connection('express');
 
 const WxSave = {
     WxConfig : '',
@@ -65,7 +67,6 @@ const WxSave = {
     //获取component_access_token
     getComponent_access_token: function () {
         return new Promise(function (resolve, reject) {
-
             //获取WxConfig;
             let WxConfig = WxSave.WxConfig;
             //判断是否有component_access_token
@@ -188,7 +189,7 @@ const WxSave = {
                 if(res){
                     let WxConfig = WxSave.WxConfig;
                     var data = {
-                        "component_appid": AppId,
+                        "component_appid": WxConfig.app_id,
                         "authorization_code": AuthCode,
                     };
                     data = JSON.stringify(data);
@@ -199,20 +200,23 @@ const WxSave = {
                         result = JSON.parse(result);
                         if(result){
                             redis.select(5);
-                            redis.hmset(AppId+'_authorizer_access_token', new Map([['authorizer_access_token', result.authorization_info.authorizer_access_token]]), function (err, result) {
+                            redis.hmset(WxConfig.id+'_authorizer_access_token', new Map([['authorizer_access_token', result.authorization_info.authorizer_access_token]]), function (err, result) {
                                 if (result == 'OK') {
                                     redis.expire(WxConfig.id+'_authorizer_access_token', 6800);
                                 }
                             });
-                            redis.hmset(AppId+'_authorizer_refresh_token', new Map([['authorizer_refresh_token', result.authorization_info.authorizer_refresh_token]]), function (err, result) {
-                                if (result == 'OK') {
+
+                            db.query("UPDATE `express`.`T_Wx` SET `authorizer_refresh_token` = ? WHERE `id` = ?", {
+                                replacements: [result.authorization_info.authorizer_refresh_token, WxConfig.id]
+                            }).spread((results) => {
+                                if(results.affectedRows > 0){
+                                    let obj = {
+                                        status : true,
+                                        msg : '授权完成'
+                                    };
+                                    resolve(obj);
                                 }
                             });
-                            let obj = {
-                                status : true,
-                                msg : '授权完成'
-                            };
-                            resolve(obj);
                         }
                     })
                 }

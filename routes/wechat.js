@@ -83,7 +83,7 @@ router.post('/receive', function(req, res, next) {
 router.post('/updateToken', function(req, res, next) {
     let AppId = req.body.AppId,
         AuthCode = req.body.AuthCode;
-    wechatServer.getWxId(AppId, result => {
+    wechatServer.getWxConfig(AppId, result => {
         if(result.status) {
             WxSave.WxConfig = result.data;
             WxSave.getAuthorizerToken(AppId, AuthCode).then(result => {
