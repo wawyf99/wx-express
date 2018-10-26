@@ -151,9 +151,7 @@ const WxSave = {
     },
     //授权
     accredit:function () {
-
         return new Promise(function (resolve, reject) {
-
             let WxConfig = WxSave.WxConfig;
             redis.select(5);
             redis.hgetall(WxConfig.id+'_auth_code').then(res => {
@@ -188,7 +186,7 @@ const WxSave = {
         return new Promise(function (resolve, reject) {
             WxSave.getComponent_access_token().then(res=>{
                 if(res){
-                    console.log(AppId, AuthCode);
+                    let WxConfig = WxSave.WxConfig;
                     var data = {
                         "component_appid": AppId,
                         "authorization_code": AuthCode,
@@ -201,21 +199,21 @@ const WxSave = {
                         result = JSON.parse(result);
                         if(result){
                             redis.select(5);
-                            //redis.hmset('key', 100, 'EX', 10);
-                            redis.hmset(AppId+'_authorizer_access_token', new Map([['authorizer_access_token', result.authorization_info.componentVerifyTicket]]), function (err, result) {
+                            redis.hmset(AppId+'_authorizer_access_token', new Map([['authorizer_access_token', result.authorization_info.authorizer_access_token]]), function (err, result) {
                                 if (result == 'OK') {
-                                    redis.expire(WxConfig.AppId+'_authorizer_access_token', 7200);
-                                    resolve('success');
+                                    redis.expire(WxConfig.id+'_authorizer_access_token', 6800);
                                 }
                             });
-                            redis.hmset(AppId+'_authorizer_refresh_token', new Map([['authorizer_access_token', result.authorization_info.authorizer_refresh_token]]), function (err, result) {
+                            redis.hmset(AppId+'_authorizer_refresh_token', new Map([['authorizer_refresh_token', result.authorization_info.authorizer_refresh_token]]), function (err, result) {
                                 if (result == 'OK') {
-                                    redis.expire(WxConfig.AppId+'_authorizer_refresh_token', 7200);
-                                    resolve('success');
                                 }
                             });
+                            let obj = {
+                                status : true,
+                                msg : '授权完成'
+                            };
+                            resolve(obj);
                         }
-                        console.log(result);
                     })
                 }
             })

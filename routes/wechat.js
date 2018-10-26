@@ -77,16 +77,19 @@ router.post('/receive', function(req, res, next) {
         }
     })
 
-
-
 });
 
 //更新token
 router.post('/updateToken', function(req, res, next) {
     let AppId = req.body.AppId,
         AuthCode = req.body.AuthCode;
-    WxSave.getAuthorizerToken(AppId, AuthCode).then(result=>{
-        res.send(result);
+    wechatServer.getWxId(AppId, result => {
+        if(result.status) {
+            WxSave.WxConfig = result.data;
+            WxSave.getAuthorizerToken(AppId, AuthCode).then(result => {
+                res.send(result);
+            })
+        }
     })
 });
 
