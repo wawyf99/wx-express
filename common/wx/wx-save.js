@@ -27,11 +27,12 @@ const WxSave = {
             let scyptoString = sha1(original);
             let encryptStr = postData.encrypt;
 
+            console.log(signature, timestamp, nonce, encrypt_type, msg_signature, postData);
+
             //判断是否与你填写TOKEN相等
             if (signature == scyptoString) {
                 let encrypt_str = _s.decrypt(msg_signature, timestamp, nonce, encryptStr);
                 let objXml = x2o(encrypt_str);
-                console.log(signature, timestamp, nonce, encrypt_type, msg_signature, postData);
                 console.log(objXml);
                 componentVerifyTicket = objXml.xml.ComponentVerifyTicket;
                 createTime = objXml.xml.CreateTime;
