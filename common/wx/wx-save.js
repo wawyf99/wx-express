@@ -8,7 +8,7 @@ var request = require('request');
 const WxSave = {
 
     //获取ComponentVerifyTicket;
-    getComponentVerifyTicket: function (msgSignature, timestamp, signature, nonce, encrypt_type, postData) {
+    getComponentVerifyTicket: function (signature, msgSignature, timestamp , nonce, encrypt_type, postData) {
         return new Promise(function (resolve, reject) {
             //获取WxConfig;
             WxSave.getWxConfg().then(function (WxConfig) {
@@ -25,12 +25,14 @@ const WxSave = {
                 let original = oriArray[0] + oriArray[1] + oriArray[2];
                 //加密
                 let scyptoString = sha1(original);
+                console.log(signature, msgSignature, timestamp , nonce, encrypt_type, postData);
                 let encryptStr = postData.encrypt;
-                console.log(postData);
+
                 //判断是否与你填写TOKEN相等
-                console.log(encryptStr);
+                //console.log(encryptStr);
                 if (signature == scyptoString) {
                     let encrypt_str = _s.decrypt(msgSignature, timestamp, nonce, encryptStr);
+                    console.log(encrypt_str);
                     let objXml = x2o(encrypt_str);
                     //console.log(objXml);
                     componentVerifyTicket = objXml.xml.ComponentVerifyTicket;
