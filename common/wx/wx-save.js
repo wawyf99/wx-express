@@ -70,35 +70,43 @@ const WxSave = {
     getComponent_access_token: function () {
         return new Promise(function (resolve, reject) {
             //获取WxConfig;
+            redis.select(7);
             WxSave.getWxConfg().then(function (WxConfig) {
-                //从redis中获取ticket
+                //判断是否有component_access_token
                 redis.select(5);
-                redis.hgetall(WxConfig.AppId+'_componentVerifyTicket').then(res => {
-                    if (res.componentVerifyTicket) {
-                        var data = {
-                            "component_appid": WxConfig.AppId,
-                            "component_appsecret": WxConfig.AppSecret,
-                            "component_verify_ticket": res.componentVerifyTicket
-                        };
-                        data = JSON.stringify(data);
-                        request.post({
-                            url: 'https://api.weixin.qq.com/cgi-bin/component/api_component_token',
-                            form: data
-                        }, function (err, httpResponse, result) {
-                            result = JSON.parse(result);
-                            if (result.component_access_token) {
-                                redis.select(5);
-                                redis.hmset(WxConfig.AppId+'_component_access_token', new Map([['expires_in', result.expires_in], ['component_access_token', result.component_access_token]]), function (err, results) {
-                                    if (results == 'OK') {
-                                        redis.expire(WxConfig.AppId+'_component_access_token', 7200);
-                                        resolve(result.component_access_token);
+                redis.hgetall(WxConfig.AppId+'_component_access_token').then(res1 => {
+                    if(res1.component_access_token){
+                        resolve(res1.component_access_token);
+                    }else {
+                        //从redis中获取ticket
+                        redis.select(5);
+                        redis.hgetall(WxConfig.AppId+'_componentVerifyTicket').then(res => {
+                            if (res.componentVerifyTicket) {
+                                var data = {
+                                    "component_appid": WxConfig.AppId,
+                                    "component_appsecret": WxConfig.AppSecret,
+                                    "component_verify_ticket": res.componentVerifyTicket
+                                };
+                                data = JSON.stringify(data);
+                                request.post({
+                                    url: 'https://api.weixin.qq.com/cgi-bin/component/api_component_token',
+                                    form: data
+                                }, function (err, httpResponse, result) {
+                                    result = JSON.parse(result);
+                                    if (result.component_access_token) {
+                                        redis.select(5);
+                                        redis.hmset(WxConfig.AppId+'_component_access_token', new Map([['expires_in', result.expires_in], ['component_access_token', result.component_access_token]]), function (err, results) {
+                                            if (results == 'OK') {
+                                                redis.expire(WxConfig.AppId+'_component_access_token', 7200);
+                                                resolve(result.component_access_token);
+                                            }
+                                        });
                                     }
-                                });
+                                })
                             }
-                        })
+                        });
                     }
-                });
-
+                })
             })
         })
     },
@@ -123,7 +131,6 @@ const WxSave = {
                             form: data
                         }, function (err, httpResponse, result) {
                             result = JSON.parse(result);
-                            //console.log(result);
                             if (result.pre_auth_code) {
                                 redis.hmset(WxConfig.AppId+'_pre_auth_code', new Map([['expires_in', result.expires_in], ['pre_auth_code', result.pre_auth_code]]), function (err, results) {
                                     if (results == 'OK') {
@@ -137,11 +144,12 @@ const WxSave = {
                     } else {
                         //如果没有则获取
                         WxSave.getComponent_access_token().then(res1 => {
-                            if (res1) {
-                                WxSave.getPre_auth_code().then(res=>{
-                                    resolve(res);
-                                });
+                            if(res1){
+                                WxSave.getPre_auth_code().then(res2 => {
+                                    resolve(res2);
+                                })
                             }
+
                         })
                     }
                 })
@@ -153,12 +161,10 @@ const WxSave = {
         return new Promise(function (resolve, reject) {
             //获取WxConfig;
             WxSave.getWxConfg().then(function (WxConfig) {
-                console.log(1);
                 redis.select(5);
                 redis.hgetall(WxConfig.AppId+'_pre_auth_code').then(res => {
                     if(res.pre_auth_code){
                     var _url = 'https://mp.weixin.qq.com/cgi-bin/componentloginpage?component_appid='+WxConfig.AppId+'&pre_auth_code='+res.pre_auth_code+'&redirect_uri='+WxConfig.redirect_url+'&auth_type=1';
-
                         let resutss = {
                             status : 'true',
                             href: '',
@@ -167,9 +173,15 @@ const WxSave = {
                         resolve(resutss);
                     }else{
                         //如果没有则获取
-                        WxSave.getPre_auth_code().then(res1 => {
-                            if(res1){
-                                WxSave.accredit();
+                        WxSave.getPre_auth_code().then(res13 => {
+                            if(res13){
+                                var _url = 'https://mp.weixin.qq.com/cgi-bin/componentloginpage?component_appid='+WxConfig.AppId+'&pre_auth_code='+res.pre_auth_code+'&redirect_uri='+WxConfig.redirect_url+'&auth_type=1';
+                                let resutss = {
+                                    status : 'true',
+                                    href: '',
+                                };
+                                resutss.href = _url;
+                                resolve(resutss);
                             }
                         })
                     }
