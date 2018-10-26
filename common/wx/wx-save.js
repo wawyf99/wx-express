@@ -209,13 +209,11 @@ const WxSave = {
                             db.query("UPDATE `express`.`T_Wx` SET `authorizer_refresh_token` = ? WHERE `id` = ?", {
                                 replacements: [result.authorization_info.authorizer_refresh_token, WxConfig.id]
                             }).spread((results) => {
-                                if(results.affectedRows > 0){
-                                    let obj = {
-                                        status : true,
-                                        msg : '授权完成'
-                                    };
-                                    resolve(obj);
-                                }
+                                let obj = {
+                                    status : true,
+                                    msg : '授权完成'
+                                };
+                                resolve(obj);
                             });
                         }
                     })
