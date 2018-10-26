@@ -27,7 +27,7 @@ const WxSave = {
                 let scyptoString = sha1(original);
 
                 let encryptStr = postData.encrypt;
-                console.log(signature, timestamp, nonce, encrypt_type, msg_signature);
+                console.log(signature, timestamp, nonce, encrypt_type, msg_signature, postData);
                 //判断是否与你填写TOKEN相等
                 //console.log(encryptStr);
                 if (signature == scyptoString) {
