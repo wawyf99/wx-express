@@ -9,16 +9,13 @@ const WxSave = {
     WxConfig : '',
     //获取ComponentVerifyTicket;
     getComponentVerifyTicket: function (signature, timestamp, nonce, encrypt_type, msg_signature, postData) {
-        console.log(signature, timestamp, nonce, encrypt_type, msg_signature, postData);
         return new Promise(function (resolve, reject) {
             //获取WxConfig;
             let WxConfig = WxSave.WxConfig;
-            console.log(WxConfig);
             let _s = new WXBizMsgCrypt(WxConfig.token, WxConfig.key, WxConfig.app_id);
             let componentVerifyTicket = '',
                 createTime = '';
             //验证签名
-
             let oriArray = new Array();
             oriArray[0] = nonce;
             oriArray[1] = timestamp;
@@ -30,11 +27,10 @@ const WxSave = {
             let scyptoString = sha1(original);
             let encryptStr = postData.encrypt;
 
-
-
             //判断是否与你填写TOKEN相等
             if (signature == scyptoString) {
                 let encrypt_str = _s.decrypt(msg_signature, timestamp, nonce, encryptStr);
+                console.log(encrypt_str);
                 let objXml = x2o(encrypt_str);
                 console.log(objXml);
                 componentVerifyTicket = objXml.xml.ComponentVerifyTicket;

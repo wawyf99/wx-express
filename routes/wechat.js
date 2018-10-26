@@ -20,24 +20,25 @@ router.get('/', (req, res, next) => {
 });
 
 router.get('/test', (req, res, next) => {
-    let msg_signature = 'cf094ce189e57cea0c4744e9eb8878e9263c2fdf',
-        timestamp = '1540550377',
-        signature = 'e980e6803865dc756d586ae818ac6d0b1194e1ed',
-        nonce = '373781067',
+    let msg_signature = 'dec8f2b9259a925885f247e29e43ca2480d59d03',
+        timestamp = '1540551636',
+        signature = '1d98a6a6ae157868f6b27d28a65143059ee6f137',
+        nonce = '160117581',
         encrypt_type = 'aes',
         componentVerifyTicket = '',
         createTime = '';
 
     var postData = {
         appid: 'wx7566be2c0098c99c',
-        encrypt: 'EKFt9mGrdCFDSJy5npheLyu1HGS2pFKO8Dx2z6inXF7KfWAqc6TN/5GI9Zc0M/rqgwexVSqtgyMrudhN0uDWBkg3p0KS0qUD+Q+NFp/1RoLPV/vltGoVbZUbAcseFcXb9tWVp4BLWUtHBqnjnHNyu0Gl+bQIQIQINi9M/RngXunChky0htwKPsSlqzgVv4K9Gvppa9k6EOm+fAq++ebXYqbWifiSFqz7KHlUpM87dYSc4y3AR3W31fqkpa7IqX08yKl1VPOnaSX+hEP4NkGPo0OdgV6XKNU1Unq0ElKZBt4sEHSG3CvjbUjPsh9UKznV00gzzCLhzYc809cg54CybY4isKlTsdZ3+kBNEYJQFaYB3cjps6+NCLCnzuTBtz+f8oYXrxhi0uSTPW5fbEwwHR5DiWwJiw0xmexlKlkVf4usRiNWJ92EhYg/PcqB0JXmIVCJ+BTbiyLRLSGjN1h6QQ=='
+        encrypt: 'KvEkMbthWQ/5AMdh9eAf9xG6SR5ZZSY5vecN+X/wSkBOVDYeB9+rfwC7f/dSc2Igtf8DzIx/8uyCe9EcaaDTVzrf32o2ncnQANC3OvH/SXBlX7SjZuyqaISx0+8PI1F9YLOSYzG5ZneyCG0mhEXYIsVwIdvK5MxS1kmzajbQIVOCjKGLGPa8ktUeRy36LW2MDFo3hQdPX5BFv9uGryafhhIhv2/3yGOihQP3O60dsxon5RPD2IQnozlk4Zsq3F57jrGa59/i8CqwjHFCrg9rHRnO+IydPTcPmSIJ7KZLBBmeGFTbGvIBY0qHUOpig11gITZO954tMQRfa032zeTQT3fg6El8cStQJuc00nXRK8Hd//yPGEEut4olpCBfSyrc4tp29US7Y42eyvCfBN8bpwZeKOAgTTqrdBtYwKRTVcD+jBhI90dxFqkqs+XJUylxuEjjB5CuP1kB/Y9y1zU/LA=='
     };
     let appid = postData.appid;
     wechatServer.getWxId(appid, result => {
         if(result.status){
             WxSave.WxConfig = result.data;
-            WxSave.getComponentVerifyTicket(signature, timestamp, nonce, encrypt_type, msg_signature, postData, ).then(result=>{
-                res.send(result);
+            console.log(4);
+            WxSave.getComponentVerifyTicket(signature, timestamp, nonce, encrypt_type, msg_signature, postData).then(results=>{
+                res.send(results);
             })
         }
     })
@@ -51,8 +52,7 @@ router.get('/redisWrite',(req,res,next) => {
     let appid = 'wx7566be2c0098c99c';
 
     wechatServer.getWxId(appid, result => {
-        console.log(result);
-        res.send(result.id);
+        WxSave.setRedis();
     })
 })
 
