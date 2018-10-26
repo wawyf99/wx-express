@@ -20,10 +20,10 @@ router.get('/', (req, res, next) => {
 });
 
 router.get('/test', (req, res, next) => {
-    let msg_signature = 'e0a9879df3a639501233c419d046dad53255dd6b',
-        timestamp = '1540525716',
-        signature = '001190808be8b13fffeca998f7ce5e96ac3c5f0b',
-        nonce = '1897889720',
+    let msg_signature = 'cf094ce189e57cea0c4744e9eb8878e9263c2fdf',
+        timestamp = '1540550377',
+        signature = 'e980e6803865dc756d586ae818ac6d0b1194e1ed',
+        nonce = '373781067',
         encrypt_type = 'aes',
         componentVerifyTicket = '',
         createTime = '';
@@ -66,6 +66,7 @@ router.post('/receive', function(req, res, next) {
         msg_signature = req.query.msg_signature;
     let postData = req.body.xml;
     //根据AppId从数据库取得id;
+    console.log(postData);
     let appid = postData.appid;
     wechatServer.getWxId(appid, result => {
         if(result.status){
