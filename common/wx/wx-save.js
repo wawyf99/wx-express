@@ -27,7 +27,7 @@ const WxSave = {
                 let scyptoString = sha1(original);
 
                 let encryptStr = postData.encrypt;
-
+                console.log(signature, timestamp, nonce, encrypt_type, msg_signature);
                 //判断是否与你填写TOKEN相等
                 //console.log(encryptStr);
                 if (signature == scyptoString) {
@@ -50,7 +50,7 @@ const WxSave = {
                     }
                 } else {
                     //认证失败，非法操作
-                    resolve('签名校验失败');
+                    resolve('签名校验2失败');
                 }
 
             });
@@ -177,7 +177,7 @@ const WxSave = {
                         //如果没有则获取
                         WxSave.getPre_auth_code().then(res13 => {
                             if(res13){
-                                var _url = 'https://mp.weixin.qq.com/cgi-bin/componentloginpage?component_appid='+WxConfig.AppId+'&pre_auth_code='+res.pre_auth_code+'&redirect_uri='+WxConfig.redirect_url+'&auth_type=1';
+                                var _url = 'https://mp.weixin.qq.com/cgi-bin/componentloginpage?component_appid='+WxConfig.AppId+'&pre_auth_code='+res13+'&redirect_uri='+WxConfig.redirect_url+'&auth_type=1';
                                 let resutss = {
                                     status : 'true',
                                     href: '',
