@@ -26,7 +26,7 @@ const WxSave = {
                 //加密
                 let scyptoString = sha1(original);
                 let encryptStr = postData.encrypt;
-                console.log(typeof (postData));
+                console.log(postData);
                 //判断是否与你填写TOKEN相等
                 console.log(encryptStr);
                 if (signature == scyptoString) {
@@ -193,7 +193,7 @@ const WxSave = {
             redis.select(5);
                 redis.hmset('wxConfig',new Map([
                     ['AppId', 'wx4f68ecdbd31e27e1'],
-                    ['AppSecret','485988360bca7a20b3931465f922fd09'],
+                    ['AppSecret','9c272303f85a7f2817185c5ef9832115'],
                     ['Token', 'MZsJy64XTu1awjsnjsamFSKiJP'],
                     ['key', 'VzqDMZsJyGqgwmTPu1j8y64X6JzG8f6zdFSKiZA4RKj'],
                     ['redirect_url','http://wx.admin.rzzc.ltd/accredit/wx4f68ecdbd31e27e1']
