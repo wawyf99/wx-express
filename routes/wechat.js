@@ -42,13 +42,13 @@ router.get('/redisWrite',(req,res,next) => {
 //微信事件推送的入口
 router.post('/receive', function(req, res, next) {
     //获取参数
-    let msgSignature = req.query.msgSignature,
+    let msg_signature = req.query.msg_signature,
         timestamp = req.query.timestamp,
         signature = req.query.signature,
         nonce = req.query.nonce,
         encrypt_type = req.query.encrypt_type;
     let postData = req.body.xml;
-    WxSave.getComponentVerifyTicket(msgSignature, timestamp, signature, nonce, encrypt_type, postData).then(result=>{
+    WxSave.getComponentVerifyTicket(msg_signature, timestamp, signature, nonce, encrypt_type, postData).then(result=>{
         res.send(result);
     })
 });
