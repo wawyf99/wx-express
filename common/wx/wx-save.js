@@ -309,10 +309,9 @@ const WxSave = {
         console.log(url,ticket);
         return new Promise(function (resolve, reject) {
             let WxConfig = WxSave.WxConfig;
-            let jsapi_ticket = ticket;
             let nonce_str = '123456';
             let timestamp = Math.floor(new Date().getTime()/1000);
-            let str = 'jsapi_ticket=' + jsapi_ticket + '&noncestr=' + nonce_str + '×tamp=' + timestamp + '&url=' + url;
+            let str = 'jsapi_ticket=' + ticket + '&noncestr=' + nonce_str + '×tamp=' + timestamp + '&url=' + url;
             let signature = sha1(str);
             let result = {
                 appId: WxConfig.authorizer_app_id,
