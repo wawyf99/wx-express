@@ -278,9 +278,9 @@ const WxSave = {
                         }, function (err, httpResponse, result) {
                             result = JSON.parse(result);
                             if(result.ticket){
-                                console.log(url);
                                 WxSave.getJssdk(url, result.ticket).then( r => {
                                     resolve(r);
+
                                 })
                             }
                         })
@@ -319,7 +319,6 @@ const WxSave = {
                 signature: signature,
             };
             resolve(result);
-
         })
     }
 }
