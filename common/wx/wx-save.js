@@ -212,59 +212,116 @@ const WxSave = {
     
     //更新authorizer_access_token
     update_authorizer_access_token:function () {
-        let WxConfig = WxSave.WxConfig;
-        //获取component_access_token
-        redis.select(5);
-        redis.hgetall(WxConfig.id+'_component_access_token').then(res => {
-            var data = {
-                "component_appid": WxConfig.app_id,
-                "authorizer_appid": WxConfig.authorizer_app_id,
-                "authorizer_refresh_token": WxConfig.authorizer_refresh_token,
-            };
-            data = JSON.stringify(data);
-            if(res.component_access_token){
-                console.log(4);
-                request.post({
-                    url: 'https:// api.weixin.qq.com /cgi-bin/component/api_authorizer_token?component_access_token='+res,
-                    form: data
-                }, function (err, httpResponse, result) {
-                    console.log(result);
-                })
-            }else {
-                console.log(5);
-                WxSave.getComponent_access_token().then(res1 => {
+        return new Promise(function (resolve, reject) {
+            let WxConfig = WxSave.WxConfig;
+            //获取component_access_token
+            redis.select(5);
+            redis.hgetall(WxConfig.id + '_access_token').then(res => {
+                var data = {
+                    "component_appid": WxConfig.app_id,
+                    "authorizer_appid": WxConfig.authorizer_app_id,
+                    "authorizer_refresh_token": WxConfig.authorizer_refresh_token,
+                };
+                data = JSON.stringify(data);
+                if (res.component_access_token) {
                     request.post({
-                        url: 'https:// api.weixin.qq.com /cgi-bin/component/api_authorizer_token?component_access_token='+res1,
+                        url: 'https://api.weixin.qq.com/cgi-bin/component/api_authorizer_token?component_access_token=' + res.component_access_token,
                         form: data
                     }, function (err, httpResponse, result) {
-                        console.log(err, httpResponse,  result);
+                        result = JSON.parse(result);
+                        if (result.authorizer_access_token) {
+                            redis.select(5);
+                            redis.hmset(WxConfig.id + '_authorizer_access_token', new Map([['authorizer_access_token', result.authorizer_access_token]]), function (err, result) {
+                                if (result == 'OK') {
+                                    redis.expire(WxConfig.id + '_authorizer_access_token', 6800);
+                                }
+                            });
+                            resolve(result.authorizer_access_token);
+                        }
                     })
-                })
-            }
+                } else {
+                    WxSave.getComponent_access_token().then(res1 => {
+                        request.post({
+                            url: 'https://api.weixin.qq.com/cgi-bin/component/api_authorizer_token?component_access_token=' + res1,
+                            form: data
+                        }, function (err, httpResponse, result) {
+                            result = JSON.parse(result);
+                            if (result.authorizer_access_token) {
+                                redis.select(5);
+                                redis.hmset(WxConfig.id + '_authorizer_access_token', new Map([['authorizer_access_token', result.authorizer_access_token]]), function (err, result) {
+                                    if (result == 'OK') {
+                                        redis.expire(WxConfig.id + '_authorizer_access_token', 6800);
+                                    }
+                                });
+                                resolve(result.authorizer_access_token);
+                            }
+                        })
+                    })
+                }
+            })
         })
     },
 
-    //获取JSSDK配置
+    //获取ticket
     getJssdkConfig:function (url) {
         return new Promise(function (resolve, reject) {
             //获取配置
             let WxConfig = WxSave.WxConfig;
-            console.log(WxConfig);
             //获取authorizer_access_token
+
             redis.select(5);
             redis.hgetall(WxConfig.id+'_authorizer_access_token').then(res => {
-                console.log(res);
                 if(res.authorizer_access_token){
                     //存在
-                    console.log(res)
+                        request.post({
+                            url: 'https://api.weixin.qq.com/cgi-bin/ticket/getticket?type=jsapi&access_token='+res.authorizer_access_token
+                        }, function (err, httpResponse, result) {
+                            result = JSON.parse(result);
+                            if(result.ticket){
+                                console.log(url);
+                                WxSave.getJssdk(url, result.ticket).then( r => {
+                                    resolve(r);
+                                })
+                            }
+                        })
                 }else{
                     console.log(2)
                     //不存在则更新
                     WxSave.update_authorizer_access_token().then(res1 => {
-                        console.log(res1);
+                        request.post({
+                            url: 'https://api.weixin.qq.com/cgi-bin/ticket/getticket?type=jsapi&access_token='+res1
+                        }, function (err, httpResponse, result) {
+                            result = JSON.parse(result);
+                            console.log(result);
+                            if(result.ticket){
+                                WxSave.getJssdk(url, result.ticket).then( r => {
+                                    resolve(r);
+                                })
+                            }
+                        })
                     })
                 }
             })
+        })
+    },
+    //返回JSSDK配置
+    getJssdk:function (url, ticket) {
+        console.log(url);
+        return new Promise(function (resolve, reject) {
+            let WxConfig = WxSave.WxConfig;
+            let jsapi_ticket = ticket;
+            let nonce_str = '123456';
+            let timestamp = Math.floor(new Date().getTime()/1000);
+            let str = 'jsapi_ticket=' + jsapi_ticket + '&noncestr=' + nonce_str + '×tamp=' + timestamp + '&url=' + url;
+            let signature = sha1(str);
+            let result = {
+                appId: WxConfig.authorizer_app_id,
+                timestamp: timestamp,
+                nonceStr: nonce_str,
+                signature: signature,
+            };
+            resolve(result);
+
         })
     }
 }
