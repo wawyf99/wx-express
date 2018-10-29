@@ -36,7 +36,7 @@ router.get('/test', (req, res, next) => {
     wechatServer.getWxId(appid, result => {
         if(result.status){
             WxSave.WxConfig = result.data;
-            console.log(4);
+            //console.log(4);
             WxSave.getComponentVerifyTicket(signature, timestamp, nonce, encrypt_type, msg_signature, postData).then(results=>{
                 res.send(results);
             })
@@ -45,7 +45,7 @@ router.get('/test', (req, res, next) => {
 });
 router.get('/tests', (req, res, next) => {
     WxSave.accredit().then(res=>{
-        console.log(res);
+        //console.log(res);
     })
 });
 router.get('/redisWrite',(req,res,next) => {
@@ -66,7 +66,7 @@ router.post('/receive', function(req, res, next) {
         msg_signature = req.query.msg_signature;
     let postData = req.body.xml;
     //根据AppId从数据库取得id;
-    console.log(postData);
+    //console.log(postData);
     let appid = postData.appid;
     wechatServer.getWxId(appid, result => {
         if(result.status){

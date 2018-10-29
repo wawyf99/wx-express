@@ -32,9 +32,9 @@ const WxSave = {
             //判断是否与你填写TOKEN相等
             if (signature == scyptoString) {
                 let encrypt_str = _s.decrypt(msg_signature, timestamp, nonce, encryptStr);
-                console.log(encrypt_str);
+                //console.log(encrypt_str);
                 let objXml = x2o(encrypt_str);
-                console.log(objXml);
+                //console.log(objXml);
                 componentVerifyTicket = objXml.xml.ComponentVerifyTicket;
                 createTime = objXml.xml.CreateTime;
                 if (componentVerifyTicket && createTime) {
@@ -268,7 +268,6 @@ const WxSave = {
             //获取配置
             let WxConfig = WxSave.WxConfig;
             //获取authorizer_access_token
-
             redis.select(5);
             redis.hgetall(WxConfig.id+'_authorizer_access_token').then(res => {
                 if(res.authorizer_access_token){
@@ -285,14 +284,12 @@ const WxSave = {
                             }
                         })
                 }else{
-                    console.log(2)
                     //不存在则更新
                     WxSave.update_authorizer_access_token().then(res1 => {
                         request.post({
                             url: 'https://api.weixin.qq.com/cgi-bin/ticket/getticket?type=jsapi&access_token='+res1
                         }, function (err, httpResponse, result) {
                             result = JSON.parse(result);
-                            console.log(result);
                             if(result.ticket){
                                 WxSave.getJssdk(url, result.ticket).then( r => {
                                     resolve(r);
