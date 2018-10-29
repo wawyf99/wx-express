@@ -306,17 +306,16 @@ const WxSave = {
     },
     //返回JSSDK配置
     getJssdk:function (url, ticket) {
-        console.log(url,ticket);
         return new Promise(function (resolve, reject) {
             let WxConfig = WxSave.WxConfig;
-            let nonce_str = '123456';
+            let nonceStr = 'ABCDEFG';
             let timestamp = Math.floor(new Date().getTime()/1000);
-            let str = 'jsapi_ticket=' + ticket + '&noncestr=' + nonce_str + '×tamp=' + timestamp + '&url=' + url;
+            let str = 'jsapi_ticket=' + ticket + '&noncestr=' + nonceStr + '&timestamp=' + timestamp + '&url=' + url;
             let signature = sha1(str);
             let result = {
                 appId: WxConfig.authorizer_app_id,
                 timestamp: timestamp,
-                nonceStr: nonce_str,
+                nonceStr: nonceStr,
                 signature: signature,
             };
             resolve(result);
