@@ -93,4 +93,22 @@ router.post('/updateToken', function(req, res, next) {
     })
 });
 
+//获取JSSDK的配置信息
+
+router.post('/wxinfo', function(req, res, next) {
+    let url = req.body.url,
+        wxid = req.body.wxid;
+    if(wxid){
+        wechatServer.getWxConfig(wxid, result => {
+            if(result.status){
+                WxSave.WxConfig = result.data;
+                //获取微信分享的配置晚间
+                WxSave.getJssdkConfig(url).then(result=>{
+                    res.send(result);
+                })
+            }
+        })
+    }
+});
+
 module.exports = router;

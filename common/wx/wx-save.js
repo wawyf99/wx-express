@@ -53,17 +53,6 @@ const WxSave = {
         })
     },
 
-    //获取公众号配置;
-    getWxConfg: function () {
-        return new Promise(function (resolve, reject) {
-            //从redis中获取配置;
-            redis.select(5);
-            redis.hgetall('wxConfig').then(res => {
-                resolve(res);
-            });
-        })
-    },
-
     //获取component_access_token
     getComponent_access_token: function () {
         return new Promise(function (resolve, reject) {
@@ -205,7 +194,6 @@ const WxSave = {
                                     redis.expire(WxConfig.id+'_authorizer_access_token', 6800);
                                 }
                             });
-
                             db.query("UPDATE `express`.`T_Wx` SET `authorizer_refresh_token` = ? WHERE `id` = ?", {
                                 replacements: [result.authorization_info.authorizer_refresh_token, WxConfig.id]
                             }).spread((results) => {
@@ -221,5 +209,63 @@ const WxSave = {
             })
         })
     },
+    
+    //更新authorizer_access_token
+    update_authorizer_access_token:function () {
+        let WxConfig = WxSave.WxConfig;
+        //获取component_access_token
+        redis.select(5);
+        redis.hgetall(WxConfig.id+'_component_access_token').then(res => {
+            var data = {
+                "component_appid": WxConfig.app_id,
+                "authorizer_appid": WxConfig.authorizer_app_id,
+                "authorizer_refresh_token": WxConfig.authorizer_refresh_token,
+            };
+            data = JSON.stringify(data);
+            if(res.component_access_token){
+                console.log(4);
+                request.post({
+                    url: 'https:// api.weixin.qq.com /cgi-bin/component/api_authorizer_token?component_access_token='+res,
+                    form: data
+                }, function (err, httpResponse, result) {
+                    console.log(result);
+                })
+            }else {
+                console.log(5);
+                WxSave.getComponent_access_token().then(res1 => {
+                    request.post({
+                        url: 'https:// api.weixin.qq.com /cgi-bin/component/api_authorizer_token?component_access_token='+res1,
+                        form: data
+                    }, function (err, httpResponse, result) {
+                        console.log(err, httpResponse,  result);
+                    })
+                })
+            }
+        })
+    },
+
+    //获取JSSDK配置
+    getJssdkConfig:function (url) {
+        return new Promise(function (resolve, reject) {
+            //获取配置
+            let WxConfig = WxSave.WxConfig;
+            console.log(WxConfig);
+            //获取authorizer_access_token
+            redis.select(5);
+            redis.hgetall(WxConfig.id+'_authorizer_access_token').then(res => {
+                console.log(res);
+                if(res.authorizer_access_token){
+                    //存在
+                    console.log(res)
+                }else{
+                    console.log(2)
+                    //不存在则更新
+                    WxSave.update_authorizer_access_token().then(res1 => {
+                        console.log(res1);
+                    })
+                }
+            })
+        })
+    }
 }
 module.exports = WxSave;
