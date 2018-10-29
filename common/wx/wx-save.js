@@ -306,7 +306,7 @@ const WxSave = {
     },
     //返回JSSDK配置
     getJssdk:function (url, ticket) {
-        console.log(url);
+        console.log(url,ticket);
         return new Promise(function (resolve, reject) {
             let WxConfig = WxSave.WxConfig;
             let jsapi_ticket = ticket;
