@@ -16,9 +16,12 @@ var app = express();
  */
 
 const ALLOW_ORIGIN = [ // 域名白名单
-    'cqdsxy.com',
-    'rzzc.ltd',
+    'xin.shiyiyiba.hsk.la',
+    'm.shanbei-course.com',
     'localhost',
+    'm.shanbei-sat.com',
+    'xin.shiyiyiba.hsk.la',
+    'xin.shiyue.hsk.la'
 ];
 
 app.all('*', function (req, res, next) {
