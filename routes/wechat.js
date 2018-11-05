@@ -30,6 +30,7 @@ router.get('/test', (req, res, next) => {
 
     var postData = {
         appid: 'wx7566be2c0098c99c',
+        appid: 'wx7566be2c0098c99c',
         encrypt: 'KvEkMbthWQ/5AMdh9eAf9xG6SR5ZZSY5vecN+X/wSkBOVDYeB9+rfwC7f/dSc2Igtf8DzIx/8uyCe9EcaaDTVzrf32o2ncnQANC3OvH/SXBlX7SjZuyqaISx0+8PI1F9YLOSYzG5ZneyCG0mhEXYIsVwIdvK5MxS1kmzajbQIVOCjKGLGPa8ktUeRy36LW2MDFo3hQdPX5BFv9uGryafhhIhv2/3yGOihQP3O60dsxon5RPD2IQnozlk4Zsq3F57jrGa59/i8CqwjHFCrg9rHRnO+IydPTcPmSIJ7KZLBBmeGFTbGvIBY0qHUOpig11gITZO954tMQRfa032zeTQT3fg6El8cStQJuc00nXRK8Hd//yPGEEut4olpCBfSyrc4tp29US7Y42eyvCfBN8bpwZeKOAgTTqrdBtYwKRTVcD+jBhI90dxFqkqs+XJUylxuEjjB5CuP1kB/Y9y1zU/LA=='
     };
     let appid = postData.appid;

@@ -1,10 +1,8 @@
 /**
  * 角色权限服务类
  */
-
-
 var connection = require('../common/db');
-const db = new connection('express');
+const db = new connection('wx');
 
 //引用实体模型
 var Roles = require("../models/express/T_Role_Link.js");

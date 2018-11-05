@@ -21,7 +21,8 @@ const ALLOW_ORIGIN = [ // 域名白名单
     'm.shanbei-sat.com',
     'xin.shiershi.hsk.la',
     'xin.shiyiyiba.hsk.la',
-    'xin.shiyue.hsk.la'
+    'xin.shiyue.hsk.la',
+    'rzzc.ltd',
 ];
 
 app.all('*', function (req, res, next) {
@@ -126,12 +127,8 @@ const role = require('./routes/role');
 app.use('/role', role);
 const wechat = require('./routes/wechat');
 app.use('/wechat', wechat);
-const chat = require('./routes/chat');
-app.use('/chat', chat);
-const domain = require('./routes/domain');
-app.use('/domain', domain);
-var expose = require('./routes/expose');
-app.use('/expose', expose);
+const wx = require('./routes/wx');
+app.use('/wx', wx);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

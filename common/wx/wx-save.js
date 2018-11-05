@@ -5,7 +5,7 @@ var Redis = require('ioredis');
 var redis = new Redis();
 var request = require('request');
 const connection = require('../db');
-db = new connection('express');
+db = new connection('wx');
 
 const WxSave = {
     WxConfig : '',

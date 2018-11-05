@@ -1,11 +1,11 @@
 const connection = require('../common/db');
-db = new connection('express');
+db = new connection('wx');
 /**
  * 获取配置
  */
 exports.getWxConfig = (id, callback) => {
     console.log(id);
-    db.query("SELECT * FROM express.T_Wx WHERE id = ?", {
+    db.query("SELECT * FROM wx.T_Wx WHERE id = ?", {
         replacements: [id]
     }).spread((results) => {
         let result = {};
@@ -19,7 +19,7 @@ exports.getWxConfig = (id, callback) => {
 
 //获取公众号关联的ID
 exports.getWxId = (appid, callback) => {
-    db.query("SELECT * FROM express.T_Wx WHERE app_id = ?", {
+    db.query("SELECT * FROM wx.T_Wx WHERE app_id = ?", {
         replacements: [appid]
     }).spread((results) => {
         let result = {};

@@ -1,8 +1,8 @@
 var connection = require('../common/db');
-const db = new connection('express');
+const db = new connection('wx');
 //引用实体模型
-var Accounts = require("../models/express/T_Account.js");
-var AccountsLink = require("../models/express/T_Account_Link.js");
+var Accounts = require("../models/wx/T_Account.js");
+var AccountsLink = require("../models/wx/T_Account_Link.js");
 
 var Account = new Accounts(db, db.Sequelize);
 var accountLinkServer = new AccountsLink(db, db.Sequelize);

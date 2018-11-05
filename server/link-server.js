@@ -3,7 +3,7 @@
  */
 
 var connection = require('../common/db');
-const db = new connection('express');
+const db = new connection('wx');
 
 //引用实体模型
 var Link = require("../models/express/T_Link_New.js");

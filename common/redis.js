@@ -5,7 +5,7 @@ var Redis = require('ioredis');
 var redis = new Redis();
 //var client  = redis.createClient();
 const connection = require('../common/db');
-db = new connection('express');
+db = new connection('wx');
 
 const redisController = {
     results : {
@@ -15,7 +15,7 @@ const redisController = {
     //更新redis
     updateRedis: function (domain) {
         return new Promise(function (resolve, reject) {
-            db.query("SELECT id, domain, mark FROM express.T_Domain WHERE `status` = 1", {
+            db.query("SELECT id, domain, mark FROM wx.T_Domain WHERE `status` = 1", {
                 replacements: []
             }).spread((results) => {
                 //清空整个redis库
