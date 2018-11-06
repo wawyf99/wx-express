@@ -194,7 +194,7 @@ const WxSave = {
                                     redis.expire(WxConfig.id+'_authorizer_access_token', 6800);
                                 }
                             });
-                            db.query("UPDATE `express`.`T_Wx` SET `authorizer_refresh_token` = ? WHERE `id` = ?", {
+                            db.query("UPDATE `wx`.`T_Wx` SET `authorizer_refresh_token` = ? WHERE `id` = ?", {
                                 replacements: [result.authorization_info.authorizer_refresh_token, WxConfig.id]
                             }).spread((results) => {
                                 let obj = {
