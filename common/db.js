@@ -4,10 +4,10 @@ var Sequelize = require("sequelize");
 const dbConfig = {
     //游戏数据库配置
     wx: {
-        host: '45.77.129.113',
+        host: '116.196.122.80',
         db: 'wx',
         uid: 'wx',
-        pwd: 'mGm8wc6FnJndzrSA',
+        pwd: '3wrZs7bhAi4GemnH',
         dialect: 'mysql',
         port: 3306,
     },
