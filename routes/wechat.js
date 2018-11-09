@@ -85,6 +85,16 @@ router.post('/receive', function(req, res, next) {
 
 });
 
+/**
+ * 微信签名校验
+ */
+router.get('/receives', function (req, res) {
+    if (utils.wechat.checkSignature(req)){
+        var result = res.status(200).send(req.query.echostr);
+        res.send(result);
+    }
+});
+
 //微信公众号事件推送的入口
 router.post('/receives', function(req, res, next) {
     //非法请求
