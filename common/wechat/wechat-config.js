@@ -13,7 +13,7 @@ exports.WechatConfig = {
     appId: 'wx10fa80285432e5b4', //appId
     appSecret: 'cab9fcdd27454183412797de831e9fb9', //appSecret
 
-    token: 'working', //token
+    token: 'ABCDEF', //token
 
     shareImg : '/public/image/img.jpg',
     /**
