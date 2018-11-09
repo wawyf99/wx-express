@@ -85,38 +85,9 @@ router.post('/receive', function(req, res, next) {
 
 });
 
-/**
- * 微信签名校验
- */
-router.get('/receives', function (req, res) {
-    if (utils.wechat.checkSignature(req)){
-        var result = res.status(200).send(req.query.echostr);
-        res.send(result);
-    }
-});
-
-//微信公众号事件推送的入口
-router.post('/receives', function(req, res, next) {
-    //非法请求
-    if (!utils.wechat.checkSignature(req))
-        return;
-    utils.wechat.loop(req).then(r => {
-        //处理微信发送的消息业务
-        if (r.type === 'text') {
-            utils.wechatUtil.receiveMessage(r.messageParameter);
-        }
-        //处理微信发送的事件业务
-        else if (r.type === 'event') {
-            utils.wechatUtil.receiveEvent(r.eventParameter);
-        }
-    });
-    //响应微信服务器
-    res.send('success');
-});
-
 router.post('/wxinfos', (req, res, next) => {
     var _url = req.body.url;
-    wxApi.WxApi.getShareConfig(_url).then(result => {
+    wechatServer.getShareConfig(_url).then(result => {
         res.send(result);
     });
 });
