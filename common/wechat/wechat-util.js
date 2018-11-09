@@ -199,7 +199,7 @@ const wechat = {
         var array = [this.token, this.timestamp, this.nonce];
         array.sort();
         var str = sha1(array.join(""));
-        console.log(str, this.signature);
+        //console.log(str, this.signature);
         return (str == this.signature)
     }
 };
