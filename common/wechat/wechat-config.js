@@ -10,8 +10,8 @@ exports.WechatConfig = {
     //appSecret: '1a9f88282a05998c796d0b7b2d77727f', //appSecret
     //working测试
 
-    appId: 'wx51d1872e4788491d', //appId
-    appSecret: 'b0ec281546205564ca0f4a293566def0', //appSecret
+    appId: 'wx10fa80285432e5b4', //appId
+    appSecret: 'cab9fcdd27454183412797de831e9fb9', //appSecret
 
     token: 'working', //token
 

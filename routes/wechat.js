@@ -3,6 +3,12 @@ var router = express.Router();
 const WxSave = require('../common/wx/wx-save');
 const wechatServer = require('../server/wechat-server');
 
+const wecaht = require('../common/wechat/wechat-oath'),
+    config = require('../common/wechat/wechat-config'),
+    utils = require('../common/wechat/wechat-util'),
+    wxApi = require('../common/wechat/wxnew-api'),
+    wechatServer = require('../server/wechat-server');
+
 /**
  * 微信授权
  */
@@ -78,6 +84,32 @@ router.post('/receive', function(req, res, next) {
         }
     })
 
+});
+
+//微信公众号事件推送的入口
+router.post('/receives', function(req, res, next) {
+    //非法请求
+    if (!utils.wechat.checkSignature(req))
+        return;
+    utils.wechat.loop(req).then(r => {
+        //处理微信发送的消息业务
+        if (r.type === 'text') {
+            utils.wechatUtil.receiveMessage(r.messageParameter);
+        }
+        //处理微信发送的事件业务
+        else if (r.type === 'event') {
+            utils.wechatUtil.receiveEvent(r.eventParameter);
+        }
+    });
+    //响应微信服务器
+    res.send('success');
+});
+
+router.post('/wxinfos', (req, res, next) => {
+    var _url = req.body.url;
+    wxApi.WxApi.getShareConfig(_url).then(result => {
+        res.send(result);
+    });
 });
 
 //更新token
