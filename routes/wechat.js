@@ -87,7 +87,7 @@ router.post('/receive', function(req, res, next) {
 
 router.post('/wxinfos', (req, res, next) => {
     var _url = req.body.url;
-    wechatServer.getShareConfig(_url).then(result => {
+    wxApi.WxApi.getShareConfig(_url).then(result => {
         res.send(result);
     });
 });
