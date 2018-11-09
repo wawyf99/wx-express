@@ -18,8 +18,8 @@ const WxApi = {
     getShareConfig:(_url)=>{
         var _urls = _url;
         var param = {
-            debug: false,
-            jsApiList: ['onMenuShareAppMessage', 'onMenuShareTimeline'],
+            debug: true,
+            jsApiList: ['onMenuShareAppMessage', 'onMenuShareTimeline', 'hideAllNonBaseMenuItem', 'showMenuItems'],
             url: _urls,
         };
         return new Promise(function (resolve, reject) {
