@@ -6,8 +6,7 @@ const wechatServer = require('../server/wechat-server');
 const wecaht = require('../common/wechat/wechat-oath'),
     config = require('../common/wechat/wechat-config'),
     utils = require('../common/wechat/wechat-util'),
-    wxApi = require('../common/wechat/wxnew-api'),
-    wechatServer = require('../server/wechat-server');
+    wxApi = require('../common/wechat/wxnew-api');
 
 /**
  * 微信授权
