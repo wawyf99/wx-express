@@ -309,7 +309,6 @@ const WxSave = {
             let nonceStr = 'ABCDEFG';
             let timestamp = Math.floor(new Date().getTime()/1000);
             let str = 'jsapi_ticket=' + ticket + '&noncestr=' + nonceStr + '&timestamp=' + timestamp + '&url=' + url;
-            console.log(ticket, url);
             let signature = sha1(str);
             let result = {
                 appId: WxConfig.authorizer_app_id,

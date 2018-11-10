@@ -109,7 +109,6 @@ router.post('/wxinfo', function(req, res, next) {
         wxid = req.body.wxid;
     redisController.redisController.getConect().then(res1=>{
         if(res1.data == true){
-            console.log(1);
             if(wxid){
                 wechatServer.getWxConfig(wxid, result => {
                     if(result.status){
@@ -122,7 +121,6 @@ router.post('/wxinfo', function(req, res, next) {
                 })
             }
         }else{
-            console.log(2);
             WxSave.getShareConfig(url).then(res3 => {
                 res.send(res3);
             })
