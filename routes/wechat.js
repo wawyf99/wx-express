@@ -2,11 +2,7 @@ var express = require('express');
 var router = express.Router();
 const WxSave = require('../common/wx/wx-save');
 const wechatServer = require('../server/wechat-server');
-
-const wecaht = require('../common/wechat/wechat-oath'),
-    config = require('../common/wechat/wechat-config'),
-    utils = require('../common/wechat/wechat-util'),
-    wxApi = require('../common/wechat/wxnew-api');
+const redisController = require('../common/redis');
 
 /**
  * 微信授权
@@ -111,17 +107,25 @@ router.post('/updateToken', function(req, res, next) {
 router.post('/wxinfo', function(req, res, next) {
     let url = req.body.url,
         wxid = req.body.wxid;
-    if(wxid){
-        wechatServer.getWxConfig(wxid, result => {
-            if(result.status){
-                WxSave.WxConfig = result.data;
-                //获取微信分享的配置晚间
-                WxSave.getJssdkConfig(url).then(result=>{
-                    res.send(result);
+    redisController.redisController.getConect().then(res1=>{
+        if(res1.data == true){
+            if(wxid){
+                wechatServer.getWxConfig(wxid, result => {
+                    if(result.status){
+                        WxSave.WxConfig = result.data;
+                        //获取微信分享的配置晚间
+                        WxSave.getJssdkConfig(url).then(res2=>{
+                            res.send(res2);
+                        })
+                    }
                 })
             }
-        })
-    }
+        }else{
+            WxSave.getShareConfig(url).then(res3 => {
+                res.send(res3);
+            })
+        }
+    })
 });
 
 module.exports = router;

@@ -6,6 +6,8 @@ var redis = new Redis();
 var request = require('request');
 const connection = require('../db');
 db = new connection('wx');
+const wechatApi = require('co-wechat-api');
+
 
 const WxSave = {
     WxConfig : '',
@@ -316,6 +318,26 @@ const WxSave = {
                 signature: signature,
             };
             resolve(result);
+        })
+    },
+
+    //获取公众号分享配置
+    getShareConfig:function (url) {
+        var _urls = url;
+        var param = {
+            debug: false,
+            jsApiList: ['onMenuShareAppMessage', 'onMenuShareTimeline', 'hideAllNonBaseMenuItem', 'showMenuItems'],
+            url: _urls,
+        };
+        return new Promise(function (resolve, reject) {
+            redis.select(4);
+            redis.hgetall('Wechat').then(res => {
+                let data = JSON.parse(res.config);
+                let api = new wechatApi(data.app_id, data.app_secret);
+                api.getJsConfig(param).then(result=> {
+                    resolve(result);
+                });
+            });
         })
     }
 }

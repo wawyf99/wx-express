@@ -114,7 +114,80 @@ const redisController = {
             }
             resolve(redisController.results.data);
         });
+    },
+    //更新公众号
+    updateWechat:function () {
+        return new Promise(function (resolve, reject) {
+            db.query("SELECT id, app_id, app_secret FROM wx.T_Wx_Wechat WHERE `status` = 3", {
+                replacements: []
+            }).spread((results) => {
+                let arr = {},
+                    id = '';
+                redis.select(4);
+                if(results.length > 0){
+                    arr.id = results[0].id;
+                    arr.app_id = results[0].app_id;
+                    arr.app_secret = results[0].app_secret;
+                    id = results[0].id;
+
+                    redis.hmset('Wechat', 'config', JSON.stringify(arr),function (err, result) {
+                        resolve(result);
+                    });
+                }else{
+                    redis.del('Wechat');
+                }
+            })
+        })
+    },
+    //设计公众号接入方式
+    setConect:function () {
+        return new Promise(function (resolve, reject) {
+            redis.select(4);
+            redis.hgetall('Conect', function (err, result) {
+                if(Object.keys(result).length != 0){
+                    if(result.type == '1'){
+                        redis.select(4);
+                        redis.hmset('Conect', 'type', '2',function (err, res) {
+                            resolve(res);
+                        });
+                    }else{
+                        redis.select(4);
+                        redis.hmset('Conect', 'type', '1',function (err, res) {
+                            resolve(res);
+                        });
+                    }
+                }else{
+                    redis.select(4);
+                    redis.hmset('Conect', 'type', '2',function (err, res) {
+                        resolve(res);
+                    });
+                }
+            });
+        })
+    },
+    //获取公众号接入方式
+    getConect:function () {
+        return new Promise(function (resolve, reject) {
+            redis.select(4);
+            redis.hgetall('Conect', function (err, result) {
+                let results = {};
+                if(Object.keys(result).length != 0){
+                    if(result.type == '1'){
+                        results.data = true;
+                        resolve(results);
+                    }else{
+                        results.data = false;
+                        resolve(results);
+                    }
+                }else{
+                    results.data = true;
+                    resolve(results);
+                }
+            });
+        })
     }
+
+
 };
 
 module.exports = {
