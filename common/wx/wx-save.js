@@ -332,6 +332,7 @@ const WxSave = {
             redis.select(4);
             redis.hgetall('Wechat').then(res => {
                 let data = JSON.parse(res.config);
+                console.log(data);
                 let api = new wechatApi(data.app_id, data.app_secret);
                 api.getJsConfig(param).then(result=> {
                     resolve(result);
