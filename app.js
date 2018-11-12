@@ -22,7 +22,13 @@ const ALLOW_ORIGIN = [ // 域名白名单
     'xin.shiershi.hsk.la',
     'xin.shiyiyiba.hsk.la',
     'xin.shiyue.hsk.la',
-    'ssmulu.com'
+    'ssmulu.com',
+    'ykmisxh.eatuo.com',
+    'n10quf.eatuo.com',
+    'b8um.eatuo.com',
+    'anovbuh.eatuo.com',
+    'r39fe.eatuo.com',
+    '7khxc.eatuo.com',
 ];
 
 app.all('*', function (req, res, next) {
