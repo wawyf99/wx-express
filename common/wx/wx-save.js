@@ -327,31 +327,59 @@ const WxSave = {
     getJsapiTticket:function(_url){
         return new Promise(function (resolve, reject) {
             //let url = _url;
-            WxSave.getTicket().then(re => {
-                let timestamp = Math.floor(new Date().getTime()/1000),
-                    url = _url,
-                    noncestr = "working",
-                    ticket = re;
-                let _str = 'jsapi_ticket='+ticket+'&noncestr='+noncestr+'&timestamp='+timestamp+'&url='+url;
-                let signature = sha1(_str);
+            redis.select(4);
+            redis.hgetall('Ticket').then(res => {
+                if(res.ticket){
+                    let timestamp = Math.floor(new Date().getTime()/1000),
+                        url = _url,
+                        noncestr = "working",
+                        ticket = res.ticket;
+                    let _str = 'jsapi_ticket='+ticket+'&noncestr='+noncestr+'&timestamp='+timestamp+'&url='+url;
+                    let signature = sha1(_str);
 
-                redis.select(4);
-                redis.hgetall('Wechat').then(res => {
-                    let config = res.config;
-                    config = JSON.parse(config);
-                    if(config.app_id){
-                        let result = {
-                            appId: config.app_id, // 必填，公众号的唯一标识
-                            timestamp: timestamp, // 必填，生成签名的时间戳
-                            nonceStr: noncestr, // 必填，生成签名的随机串
-                            signature: signature,// 必填，签名
-                        };
-                        resolve(result);
-                    }
-                })
+                    redis.select(4);
+                    redis.hgetall('Wechat').then(res => {
+                        let config = res.config;
+                        config = JSON.parse(config);
+                        if(config.app_id){
+                            let result = {
+                                appId: config.app_id, // 必填，公众号的唯一标识
+                                timestamp: timestamp, // 必填，生成签名的时间戳
+                                nonceStr: noncestr, // 必填，生成签名的随机串
+                                signature: signature,// 必填，签名
+                            };
+                            resolve(result);
+                        }
+                    })
+                }else{
+                    WxSave.getTicket().then(re => {
+                        let timestamp = Math.floor(new Date().getTime()/1000),
+                            url = _url,
+                            noncestr = "working",
+                            ticket = re;
+                        let _str = 'jsapi_ticket='+ticket+'&noncestr='+noncestr+'&timestamp='+timestamp+'&url='+url;
+                        let signature = sha1(_str);
+
+                        redis.select(4);
+                        redis.hgetall('Wechat').then(res => {
+                            let config = res.config;
+                            config = JSON.parse(config);
+                            if(config.app_id){
+                                let result = {
+                                    appId: config.app_id, // 必填，公众号的唯一标识
+                                    timestamp: timestamp, // 必填，生成签名的时间戳
+                                    nonceStr: noncestr, // 必填，生成签名的随机串
+                                    signature: signature,// 必填，签名
+                                };
+                                resolve(result);
+                            }
+                        })
 
 
+                    })
+                }
             })
+
         })
     },
 
