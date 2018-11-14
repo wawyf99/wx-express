@@ -6,7 +6,6 @@ var redis = new Redis();
 var request = require('request');
 const connection = require('../db');
 db = new connection('wx');
-const wechatApi = require('co-wechat-api');
 
 
 const WxSave = {
@@ -320,6 +319,38 @@ const WxSave = {
         })
     },
 
+    //获取公众号签名
+    getJsapiTticket:function(_url){
+        return new Promise(function (resolve, reject) {
+            //let url = _url;
+            WxSave.getTicket().then(re => {
+                let timestamp = Math.floor(new Date().getTime()/1000),
+                    url = _url,
+                    noncestr = "working",
+                    ticket = re;
+                let _str = 'jsapi_ticket='+ticket+'&noncestr='+noncestr+'&timestamp='+timestamp+'&url='+url;
+                let signature = sha1(_str);
+
+                redis.select(4);
+                redis.hgetall('Wechat').then(res => {
+                    let config = res.config;
+                    config = JSON.parse(config);
+                    if(config.app_id){
+                        let result = {
+                            appId: config.app_id, // 必填，公众号的唯一标识
+                            timestamp: timestamp, // 必填，生成签名的时间戳
+                            nonceStr: noncestr, // 必填，生成签名的随机串
+                            signature: signature,// 必填，签名
+                        };
+                        resolve(result);
+                    }
+                })
+
+
+            })
+        })
+    },
+
     //获取公众号分享配置
     getShareConfig:function (url) {
         var _urls = url;
@@ -329,16 +360,65 @@ const WxSave = {
             url: _urls,
         };
         return new Promise(function (resolve, reject) {
+
+        })
+    },
+
+    //获取ticket
+    getTicket:function(){
+        return new Promise(function (resolve, reject) {
+            redis.select(4);
+            redis.hgetall('AccessToken').then(res => {
+                if(res.access_token){
+                    request.get({
+                        url: 'https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token='+res.access_token+'&type=jsapi'
+                    }, function (err, httpResponse, re) {
+                        re = JSON.parse(re);
+                        if(re.ticket){
+                            redis.select(4);
+                            redis.hmset('Ticket', new Map([['ticket', re.ticket]]), function (err, r) {
+                                if (r == 'OK') {
+                                    redis.expire('Ticket', 7000);
+                                    resolve(re.ticket);
+                                }
+                            });
+                        }
+                    })
+
+                }else{
+                    WxSave.setAccessToken().then( res => {
+                        WxSave.getTicket().then(re => {
+                            resolve(re);
+                        });
+                    });
+                }
+            })
+        })
+    },
+    //获取并设置AccessToken
+    setAccessToken:function () {
+        return new Promise(function (resolve, reject) {
             redis.select(4);
             redis.hgetall('Wechat').then(res => {
-                let data = JSON.parse(res.config);
-                console.log(data);
-                let api = new wechatApi(data.app_id, data.app_secret);
-                api.getJsConfig(param).then(result=> {
-                    resolve(result);
-                });
-            });
+                let config = res.config;
+                config = JSON.parse(config);
+                request.get({
+                    url: 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='+config.app_id+'&secret='+config.app_secret
+                }, function (err, httpResponse, result) {
+                    result = JSON.parse(result);
+                    if(result.access_token){
+                        redis.select(4);
+                        redis.hmset('AccessToken', new Map([['access_token', result.access_token]]), function (err, r) {
+                            if (r == 'OK') {
+                                redis.expire('AccessToken', 7000);
+                                resolve(result.access_token);
+                            }
+                        });
+                    }
+                })
+            })
         })
+
     }
 }
 module.exports = WxSave;

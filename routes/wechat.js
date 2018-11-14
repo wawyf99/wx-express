@@ -121,7 +121,7 @@ router.post('/wxinfo', function(req, res, next) {
                 })
             }
         }else{
-            WxSave.getShareConfig(url).then(res3 => {
+            WxSave.getJsapiTticket(url).then(res3 => {
                 res.send(res3);
             })
         }
