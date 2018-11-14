@@ -124,6 +124,8 @@ const redisController = {
                 let arr = {},
                     id = '';
                 redis.select(4);
+                redis.del('Ticket');
+                redis.del('AccessToken');
                 if(results.length > 0){
                     arr.id = results[0].id;
                     arr.app_id = results[0].app_id;
@@ -133,6 +135,7 @@ const redisController = {
                     redis.hmset('Wechat', 'config', JSON.stringify(arr),function (err, result) {
                         resolve(result);
                     });
+
                 }else{
                     redis.del('Wechat');
                 }
