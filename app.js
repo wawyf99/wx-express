@@ -24,7 +24,8 @@ const ALLOW_ORIGIN = [ // 域名白名单
     'xin.shiyue.hsk.la',
     'ssmulu.com',
     'eatuo.com',
-    'shiyisan.shiyueshiba.hsk.la'
+    'shiyisan.shiyueshiba.hsk.la',
+    'ajugid.youdao.hsk.la'
 ];
 
 app.all('*', function (req, res, next) {
